@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Tienda {
 	private int idTienda;
 	private String direccion;
-	private  static ArrayList<Trabajador> listaTrabajadores;
+	
 	private ArrayList<Moto> listaMotos;
 	private ArrayList<Producto> listaProductos;
 	
@@ -33,13 +33,9 @@ public class Tienda {
 		this.direccion = direccion;
 	}
 
-	public static ArrayList<Trabajador> getListaTrabajadores() {
-		return listaTrabajadores;
-	}
 
-	public static void setListaTrabajadores(ArrayList<Trabajador> listaTrabajadores) {
-		Tienda.listaTrabajadores = listaTrabajadores;
-	}
+
+
 
 	public ArrayList<Moto> getListaMotos() {
 		return listaMotos;

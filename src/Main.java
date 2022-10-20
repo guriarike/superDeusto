@@ -25,8 +25,18 @@ public class Main {
 		 * System.out.println(compra.toString());
 		 */
 		ArrayList<User> list = new ArrayList<>();
-		User u = new User("guria","rike",null,"guri",1);
-		User u1= new User("jon","pp",null,"pp",2);
+		User u = new User();
+		u.setNombre("guria");
+		u.setApellido("rike");
+		u.setFechaNacimiento(null);
+		u.setUserName("guriarike");
+		u.setId_usuario(1);
+		User u1= new User();
+		u1.setNombre("asier");
+		u1.setApellido("jaure");
+		u1.setFechaNacimiento(null);
+		u1.setUserName("asierjaure");
+		u.setId_usuario(2);
 		list.add(u1);
 		list.add(u);
 		crearCSVusuarios(list, "data//nuevoCSV");
@@ -34,17 +44,19 @@ public class Main {
 
 	// METODOS PARA AÑADIR CSVs y TENER OBJETOS CREADOS POR NOSOTROS
 
-	public static void crearListaDeUsuariosConCSV(String ruta) {
+	public static ArrayList<User> crearListaDeUsuariosConCSV(String ruta) {
+		ArrayList<User> listaUsuarios = null;
 		try {
+			
 			BufferedReader br = new BufferedReader(new FileReader(ruta));
 			String strLine = "";
 			StringTokenizer st = null;
-			ArrayList<User> listaUsuarios = new ArrayList<>();
+			 listaUsuarios = new ArrayList<>();
 
 			while ((strLine = br.readLine()) != null) {
 				// break comma separated line using ","
 				st = new StringTokenizer(strLine, ",");
-				User u = new User("", "", null, "", 0);
+				User u = new User();
 
 				u.setNombre(st.nextToken());
 
@@ -71,6 +83,7 @@ public class Main {
 		} catch (Exception e) {
 			System.out.println("Exception while reading csv file: " + e);
 		}
+		return listaUsuarios;
 
 	}
 
