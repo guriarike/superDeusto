@@ -11,12 +11,13 @@ public class User extends  Persona{
 	private int id_usuario;
 	
 	// CONSTRUCTOR
+	/*
 	public User(String nombre, String apellido, LocalDateTime fechaNacimiento, String userName, int id_usuario) {
 		super(nombre, apellido, fechaNacimiento);
 		this.userName = userName;
 		this.id_usuario = id_usuario;
 	}
-	
+	*/
 	//CONSTRUCTOR SIN PARAMETROS
 	
 	//GETTERS Y SETTERS
