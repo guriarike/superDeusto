@@ -9,12 +9,13 @@ public class Persona {
 	
 	
 	
-	public Persona(String nombre, String apellido, LocalDateTime fechaNacimiento2) {
+	/*public Persona(String nombre, String apellido, LocalDateTime fechaNacimiento2) {
 		super();
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.fechaNacimiento = fechaNacimiento2;
 	}
+	*/
 	//getters y setters
 	public String getNombre() {
 		return nombre;
