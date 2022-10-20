@@ -1,18 +1,19 @@
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Persona {
 	private String nombre;
 	private String apellido;
-	private Date fechaNacimiento;
+	private LocalDateTime fechaNacimiento;
 	
 	
 	
 	
-	public Persona(String nombre, String apellido, Date fechaNacimiento) {
+	public Persona(String nombre, String apellido, LocalDateTime fechaNacimiento2) {
 		super();
 		this.nombre = nombre;
 		this.apellido = apellido;
-		this.fechaNacimiento = fechaNacimiento;
+		this.fechaNacimiento = fechaNacimiento2;
 	}
 	//getters y setters
 	public String getNombre() {
@@ -27,10 +28,10 @@ public class Persona {
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
-	public Date getFechaNacimiento() {
+	public LocalDateTime getFechaNacimiento() {
 		return fechaNacimiento;
 	}
-	public void setFechaNacimiento(Date fechaNacimiento) {
+	public void setFechaNacimiento(LocalDateTime fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 }

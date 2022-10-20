@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Trabajador extends Persona{
@@ -6,7 +7,7 @@ public class Trabajador extends Persona{
 	private int numeroHorasSemanales;
 	
 	//constructor
-	public Trabajador(String nombre, String apellido, Date fechaNacimiento, int numeroSeguridadSocial, String email,
+	public Trabajador(String nombre, String apellido, LocalDateTime fechaNacimiento, int numeroSeguridadSocial, String email,
 			int numeroHorasSemanales) {
 		super(nombre, apellido, fechaNacimiento);
 		this.numeroSeguridadSocial = numeroSeguridadSocial;
