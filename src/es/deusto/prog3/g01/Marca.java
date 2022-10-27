@@ -1,9 +1,12 @@
 package es.deusto.prog3.g01;
 
+import java.util.ArrayList;
+
 public class Marca {
 	private String nombreMarca;
 	private int idMarca;
-	
+	private ArrayList<Marca> listaProductosMarca;
+
 	
 	//constructor
 	/*public Marca(String nombreMarca, int idMarca) {

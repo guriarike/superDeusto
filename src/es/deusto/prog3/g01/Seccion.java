@@ -1,8 +1,11 @@
 package es.deusto.prog3.g01;
 
+import java.util.ArrayList;
+
 public class Seccion {
 	private int seccionID;
 	private String nombre;
+	private ArrayList<Producto> listaProductosSeccion;
 	
 	
 	/*public Seccion(int seccionID, String nombre) {

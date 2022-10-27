@@ -10,6 +10,7 @@ import java.util.StringTokenizer;
 public class User extends  Persona{
 	private String userName;
 	private int id_usuario;
+	private String userContraseña;
 	
 	// CONSTRUCTOR
 	/*
@@ -22,6 +23,14 @@ public class User extends  Persona{
 	//CONSTRUCTOR SIN PARAMETROS
 	
 	//GETTERS Y SETTERS
+
+	public String getUserContraseña() {
+		return userContraseña;
+	}
+
+	public void setUserContraseña(String userContraseña) {
+		this.userContraseña = userContraseña;
+	}
 
 	public String getUserName() {
 		return userName;
