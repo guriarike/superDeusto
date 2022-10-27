@@ -1,3 +1,4 @@
+package es.deusto.prog3.g01;
 import java.util.ArrayList;
 
 public class Tienda {
