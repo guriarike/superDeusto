@@ -6,11 +6,10 @@ public class Marca {
 	
 	
 	//constructor
-	public Marca(String nombreMarca, int idMarca) {
-		super();
+	/*public Marca(String nombreMarca, int idMarca) {
 		this.nombreMarca = nombreMarca;
 		this.idMarca = idMarca;
-	}
+	}*/
 //	getters y setters
 
 

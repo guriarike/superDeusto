@@ -5,20 +5,32 @@ public class Producto {
 	private String nombreProducto;
 	private Marca marca;
 	private double precioProducto;
+	private Seccion seccion;
 	
 	//constructor
-	public Producto(int idProducto, String nombreProducto, Marca marca, double precioProducto) {
+	/*public Producto(int idProducto, String nombreProducto, Marca marca, double precioProducto) {
 		super();
 		this.idProducto = idProducto;
 		this.nombreProducto = nombreProducto;
 		this.marca = marca;
 		this.precioProducto = precioProducto;
-	}
+	}*/
 	//getters y setters
-
+	
+	
 	public int getIdProducto() {
 		return idProducto;
 	}
+
+	public Seccion getSeccion() {
+		return seccion;
+	}
+
+
+	public void setSeccion(Seccion seccion) {
+		this.seccion = seccion;
+	}
+
 
 	public void setIdProducto(int idProducto) {
 		this.idProducto = idProducto;
