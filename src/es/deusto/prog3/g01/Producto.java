@@ -1,3 +1,4 @@
+package es.deusto.prog3.g01;
 
 public class Producto {
 	private int idProducto;
