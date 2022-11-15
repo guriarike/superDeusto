@@ -11,15 +11,14 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.StringTokenizer;
 
+import es.deusto.prog3.gui.VentanaPrincipal;
+
 public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-	GestorBD gestorBD = new GestorBD();		
-		
-		//CREATE DATABASE: Se crea la BBDD
-		gestorBD.crearBBDD();
-		
+	VentanaPrincipal ventana = new VentanaPrincipal();
+	
 		
 
 	}
