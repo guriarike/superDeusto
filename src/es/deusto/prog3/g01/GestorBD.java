@@ -6,9 +6,13 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 public class GestorBD {
@@ -31,18 +35,27 @@ public class GestorBD {
 		// Al abrir la conexión, si no existía el fichero, se crea la base de datos
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 			String Producto = "CREATE TABLE IF NOT EXISTS PRODUCTO(\n" + " ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ " NAME TEXT NOT NULL,\n" + "PRECIO DOUBLE NOT NULL,\n" + ");\n";
+					+ " NAME TEXT NOT NULL,\n" + "PRECIO DOUBLE NOT NULL,\n"
+					+ "MARCA INT FOREING KEY REFERENCES MARCA(ID),"
+					+ "SECCION INT FOREING KEY REFERENCES SECCION(ID),\n"
+					+ "COMPRA INT FOREING KEY REFERENCES COMPRA(ID)"
+					
+					+ ")";
 			String Seccion = "CREATE TABLE IF NOT EXISTS SECCION(\n" + "ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ "NAMESECCION TEXT NOT NULL\n" + ");\n";
-			String Marca = "CREATE TABEL IF NOT EXISTS MARCA(\n" + "ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ "NAMEMARCA TEXT NOT NULL\n" + ");\n";
+					+ "NAMESECCION TEXT NOT NULL)";
+			String Marca = "CREATE TABLE IF NOT EXISTS MARCA(\n" + "ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+					+ "NAMEMARCA TEXT NOT NULL)";
 			String Compra = "CREATE TABLE IF NOT EXISTS COMPRA(\n" + "ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ "FECHA DATE NOT NULL,\n" + "PRECIO DOUBLE NOT NULL\n" + ");\n";
+					+ "FECHA DATE NOT NULL,\n" + "PRECIO DOUBLE NOT NULL)";
 
 			String sql = "CREATE TABLE IF NOT EXISTS USER (\n" + " ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ " NAME TEXT NOT NULL,\n" + " PASSWORD TEXT NOT NULL\n" + ");\n" + Producto + Seccion + Marca
-					+ Compra;
+					+ " NAME TEXT NOT NULL,\n" + "APELLIDO TEXT NOT NULL,\n" + "FECHANACIMIENTO DATE,\n"
+					+ "USERNAME TEXT NOT NULL,\n" + " PASSWORD TEXT NOT NULL)";
 			stmt.executeUpdate(sql);
+			stmt.executeUpdate(Producto);
+			stmt.executeUpdate(Seccion);
+			stmt.executeUpdate(Marca);
+			stmt.executeUpdate(Compra);
 
 			if (!stmt.execute(sql)) {
 				System.out.println("- Se ha creado la tabla Cliente");
@@ -71,7 +84,7 @@ public class GestorBD {
 	}
 
 	// Metodo para insertar usuarios en la base de datos
-	public void insertarUsuarios(ArrayList<User> listaUsuariosAInsertar) {
+	public void insertarUsuarios(User ... listaUsuariosAInsertar) {
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 			for (User u : listaUsuariosAInsertar) {
 				String nombre = u.getNombre();
@@ -90,6 +103,64 @@ public class GestorBD {
 		}
 		;
 
+	}
+	public void insetarProductos(Producto ... listaProductos) {
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+			for (Producto p : listaProductos) {
+				String nombre = p.getNombreProducto();
+				Double precio = p.getPrecioProducto();
+				String sql = "INSERT INTO USER (nombre,apellido,fechaNacimiento,username,userID,userContraseña)"
+						+ "values(%s,%s,%s,%s,%s,%s";
+			
+				stmt.executeUpdate(sql);
+
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	// METODOS QUE DEVUELVEN COSAS DE LA BASE DE DATOS
+	public static ArrayList<User> todosLosUsuarios() throws SQLException {
+		ArrayList<User> listaUsuarios = null;
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+
+			String sql = "SELECT * FROM USER";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				User user = new User();
+				user.setNombre(rs.getString("NAME"));
+				user.setApellido(rs.getString("APELLIDO"));
+				// user.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
+				user.setUserName(rs.getString("USERNAME"));
+				user.setUserContraseña("PASSWORD");
+				listaUsuarios.add(user);
+			}
+
+		}
+		return listaUsuarios;
+
+	}
+
+	public static User usuarioPorUserName(String userName) throws SQLException {
+		User user = null;
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+
+			String sql = "SELECT * FROM USER WHERE USERNAME = %s";
+			String.format(sql, userName);
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				user = new User();
+				user.setNombre(rs.getString("NAME"));
+				user.setApellido(rs.getString("APELLIDO"));
+				// user.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
+				user.setUserName(rs.getString("USERNAME"));
+				user.setUserContraseña("PASSWORD");
+
+			}
+			return user;
+
+		}
 	}
 
 	/*
@@ -112,7 +183,7 @@ public class GestorBD {
 	 * 
 	 * 
 	 */
-	// Metodos para leer y creer CSVs
+	// Metodos para leer y creer CSVs y para crear usuarios y productos
 	public static ArrayList<User> crearListaDeUsuariosConCSV(String ruta) {
 		ArrayList<User> listaUsuarios = null;
 		try {
@@ -172,6 +243,46 @@ public class GestorBD {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+
+	}
+
+	public static void crear100UsuariosRandom() throws SQLException {
+		int i = 100;
+		String[] posiblesNombres = { "Guria", "Jon_Ander", "Jon", "Iker", "Asier", "Iñigo", "Roberto", "Ander", "Unai",
+				"Oier", "Julen", "Aingeru", "Biggie", "Yago", "Veronica", "Hairong", "Angela", "Sara", "Janire",
+				"Laura", "Marta", "Naia", "June", "Leire", "Ariane", "Tatiana", "Olatz", "Marina", "Julene", "Ane",
+				"Maite", "Blanca" };
+		String[] posiblesApellidos = { "Rike", "Jauregi", "Gallastegi", "Gipu", "Fernandez", "Calvo", "Nuñez", "Zelaia",
+				"Libano", "Pradera", "Canales", "Muñoz", "Artetxe", "Salinas", "Rio", "Barandiaran", "Guelvenzu",
+				"Rodrigez", "Busquets", "Messi", "Ronaldo", "Williams", "Gonzalez", "Fitipaldi", "West", "Smalls",
+				"Hernandez", "Ancelloti", "Guardiola" };
+
+		Random random = new Random();
+		int upperboundNombres = posiblesNombres.length;
+		int upperboundApellidos = posiblesApellidos.length;
+
+		for (i = 0; i < 100; i++) {
+			int numeroRandomParaUserName = random.nextInt(100);
+			String randomNombre = posiblesNombres[random.nextInt(upperboundNombres - 1)];
+			String randomApellido = posiblesApellidos[random.nextInt(upperboundApellidos - 1)];
+			String userName = randomNombre + randomApellido + numeroRandomParaUserName;
+			String contraseña = userName;
+			System.out.println(userName);
+			// System.out.println("NOMBRE :"+ randomNombre);
+			// System.out.println("APELLIDO :"+ randomApellido);
+			System.out.println("#######################################");
+			try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+				String sql = "INSERT INTO USER (ID,NAME,APELLIDO,FECHANACIMIENTO,USERNAME,CONTRASEÑA) VALUES(0,'"+randomNombre+"','"+randomApellido+"',null,'"+userName+"','"+contraseña+"'";
+				stmt.executeUpdate(sql);
+				if (!stmt.execute(sql)) {
+					System.out.println("- Se han insertado los 100 usuarios en la tabla Cliente");
+				}
+			} catch (Exception ex) {
+				System.err.println(String.format("* Error al Insertar usuarios en la BBDD: %s", ex.getMessage()));
+				ex.printStackTrace();
+			}
+		}
+	
 
 	}
 }
