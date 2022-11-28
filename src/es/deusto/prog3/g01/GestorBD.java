@@ -19,7 +19,7 @@ public class GestorBD {
 	protected static final String DRIVER_NAME = "org.sqlite.JDBC";
 	protected static final String DATABASE_FILE = "db/database.db";
 	protected static final String CONNECTION_STRING = "jdbc:sqlite:" + DATABASE_FILE;
-
+	
 	public GestorBD() {
 		try {
 			// Cargar el diver SQLite
@@ -84,17 +84,18 @@ public class GestorBD {
 	}
 
 	// Metodo para insertar usuarios en la base de datos
-	public void insertarUsuarios(User ... listaUsuariosAInsertar) {
+	public static void insertarUsuarios(User... listaUsuariosAInsertar ) {
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 			for (User u : listaUsuariosAInsertar) {
 				String nombre = u.getNombre();
 				String apellido = u.getApellido();
-				LocalDateTime fechaNacimiento = u.getFechaNacimiento();
-				int id = u.getId_usuario();
+				String userName = u.getUserName();
 				String contraseña = u.getUserContraseña();
-				String sql = "INSERT INTO USER (nombre,apellido,fechaNacimiento,username,userID,userContraseña)"
-						+ "values(%s,%s,%s,%s,%s,%s";
-				String.format(sql, nombre, apellido, fechaNacimiento, id, contraseña);
+				
+				
+				
+				String sql = "INSERT INTO USER (NAME,APELLIDO,USERNAME,PASSWORD)"
+						+ "VALUES('"+nombre+"','"+apellido+"','"+userName+"','"+contraseña+"');";
 				stmt.executeUpdate(sql);
 
 			}
@@ -104,14 +105,16 @@ public class GestorBD {
 		;
 
 	}
-	public void insetarProductos(Producto ... listaProductos) {
+	public static void insetarProductos(ArrayList<Producto> listaProductos) {
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 			for (Producto p : listaProductos) {
 				String nombre = p.getNombreProducto();
 				Double precio = p.getPrecioProducto();
-				String sql = "INSERT INTO USER (nombre,apellido,fechaNacimiento,username,userID,userContraseña)"
-						+ "values(%s,%s,%s,%s,%s,%s";
-			
+				Marca marca = p.getMarca();
+				Seccion seccion = p.getSeccion();
+				String sql = "INSERT INTO PRODUCTO (NAME,PRECIO,MARCA,SECCION)"
+						+ "VALUES(%s,%d,%s,%s);";
+				String.format(sql,nombre,precio,marca,seccion);
 				stmt.executeUpdate(sql);
 
 			}
@@ -139,6 +142,25 @@ public class GestorBD {
 
 		}
 		return listaUsuarios;
+
+	}
+	public static ArrayList<Producto> todosLosProductos() throws SQLException {
+		ArrayList<Producto> listaProductos = null;
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+
+			String sql = "SELECT * FROM USER";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				Producto p  = new Producto();
+				p.setNombreProducto(rs.getString("NAME"));
+				p.setPrecioProducto((Integer)rs.getInt("PRECIO"));
+				p.setMarca((Marca)rs.getObject("MARCA"));
+				p.setSeccion((Seccion)rs.getObject("SECCION"));
+				listaProductos.add(p);
+			}
+
+		}
+		return listaProductos;
 
 	}
 
@@ -247,6 +269,7 @@ public class GestorBD {
 	}
 
 	public static void crear100UsuariosRandom() throws SQLException {
+		ArrayList<User>listaUsuarios = null ;
 		int i = 100;
 		String[] posiblesNombres = { "Guria", "Jon_Ander", "Jon", "Iker", "Asier", "Iñigo", "Roberto", "Ander", "Unai",
 				"Oier", "Julen", "Aingeru", "Biggie", "Yago", "Veronica", "Hairong", "Angela", "Sara", "Janire",
@@ -260,29 +283,142 @@ public class GestorBD {
 		Random random = new Random();
 		int upperboundNombres = posiblesNombres.length;
 		int upperboundApellidos = posiblesApellidos.length;
-
-		for (i = 0; i < 100; i++) {
-			int numeroRandomParaUserName = random.nextInt(100);
-			String randomNombre = posiblesNombres[random.nextInt(upperboundNombres - 1)];
-			String randomApellido = posiblesApellidos[random.nextInt(upperboundApellidos - 1)];
-			String userName = randomNombre + randomApellido + numeroRandomParaUserName;
-			String contraseña = userName;
-			System.out.println(userName);
-			// System.out.println("NOMBRE :"+ randomNombre);
-			// System.out.println("APELLIDO :"+ randomApellido);
-			System.out.println("#######################################");
-			try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
-				String sql = "INSERT INTO USER (ID,NAME,APELLIDO,FECHANACIMIENTO,USERNAME,CONTRASEÑA) VALUES(0,'"+randomNombre+"','"+randomApellido+"',null,'"+userName+"','"+contraseña+"'";
-				stmt.executeUpdate(sql);
-				if (!stmt.execute(sql)) {
-					System.out.println("- Se han insertado los 100 usuarios en la tabla Cliente");
-				}
-			} catch (Exception ex) {
-				System.err.println(String.format("* Error al Insertar usuarios en la BBDD: %s", ex.getMessage()));
-				ex.printStackTrace();
+		try(Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()){
+			for (i = 0; i < 100; i++) {
+				int numeroRandomParaUserName = random.nextInt(100);
+				String randomNombre = posiblesNombres[random.nextInt(upperboundNombres - 1)];
+				String randomApellido = posiblesApellidos[random.nextInt(upperboundApellidos - 1)];
+				String userName = randomNombre + randomApellido + numeroRandomParaUserName;
+				String contraseña = userName;
+				System.out.println(userName);
+				// System.out.println("NOMBRE :"+ randomNombre);
+				// System.out.println("APELLIDO :"+ randomApellido);
+				System.out.println("#######################################");
+				User u = new User();
+				u.setNombre(randomNombre);
+				u.setApellido(randomApellido);
+				u.setFechaNacimiento(null);
+				u.setUserName(userName);
+				u.setUserContraseña(contraseña);
+				insertarUsuarios(u);
 			}
+			
+			
 		}
+		
 	
 
 	}
+	
+	
+	// Inicializador de secciones Marcas y Productos
+	public static void InitProductosMarcasSecciones() throws SQLException {
+		
+		ArrayList<Producto> listaProductos = new ArrayList<>() ;
+		ArrayList<Marca> listaMarcas = new ArrayList<>();
+		ArrayList<Seccion> listaSecciones = new ArrayList<>() ;
+		 
+		Seccion s = new Seccion();
+		s.setNombre("Lacteos");
+		
+		Marca m = new Marca();
+		m.setNombreMarca("Pascual");
+		
+		Producto p = new Producto();
+		p.setNombreProducto("Leche semidesnatada");
+		p.setPrecioProducto(2.05);
+		p.setMarca(m);
+		p.setSeccion(s);
+		
+		
+		
+		
+		Marca m1= new Marca();
+		m1.setNombreMarca("Puleva");
+		
+		Producto p1 = new Producto();
+		p1.setNombreProducto("Batido chocolate");
+		p1.setPrecioProducto(2.05);
+		p1.setMarca(m1);
+		p1.setSeccion(s);
+		
+		
+		//######################################################
+		Seccion s1 = new Seccion();
+		s1.setNombre("Carnes");
+		
+		Marca m2 = new Marca();
+		m2.setNombreMarca("KFC");
+		
+		Producto p2 = new Producto();
+		p2.setNombreProducto("Alitas de pollo");
+		p2.setPrecioProducto(8.05);
+		p2.setMarca(m2);
+		p2.setSeccion(s1);
+		
+		
+		
+		
+		Marca m3= new Marca();
+		m3.setNombreMarca("Eusko carne");
+		
+		Producto p3 = new Producto();
+		p3.setNombreProducto("Chuleta");
+		p3.setPrecioProducto(9.05);
+		p3.setMarca(m3);
+		p3.setSeccion(s1);
+		
+		//######################################################
+		Seccion s2 = new Seccion();
+		s2.setNombre("Panaderia y bolleria");
+		
+		Marca m4 = new Marca();
+		m4.setNombreMarca("Bimbo");
+		
+		Producto p4 = new Producto();
+		p4.setNombreProducto("Pan Bimbo");
+		p4.setPrecioProducto(8.05);
+		p4.setMarca(m2);
+		p4.setSeccion(s2);
+		
+		
+		
+		
+		Marca m5= new Marca();
+		m5.setNombreMarca("Nutela");
+		
+		Producto p5 = new Producto();
+		p5.setNombreProducto("Bollos rellenos");
+		p5.setPrecioProducto(9.05);
+		p5.setMarca(m3);
+		p5.setSeccion(s2);
+		
+		
+		listaSecciones.add(s);
+		listaSecciones.add(s1);
+		listaSecciones.add(s2);
+		listaMarcas.add(m);
+		listaMarcas.add(m1);
+		listaMarcas.add(m2);
+		listaMarcas.add(m3);
+		listaMarcas.add(m4);
+		listaMarcas.add(m5);
+		listaProductos.add(p);
+		listaProductos.add(p1);
+		listaProductos.add(p2);
+		listaProductos.add(p3);
+		listaProductos.add(p4);
+		listaProductos.add(p5);
+		try(Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()){
+			insetarProductos(listaProductos);
+				
+				
+			}
+		}
+	
+		
+	
+	
+	
+	
 }

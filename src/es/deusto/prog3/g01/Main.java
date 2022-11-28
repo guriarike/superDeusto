@@ -1,4 +1,5 @@
 package es.deusto.prog3.g01;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,26 +19,13 @@ public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-	VentanaPrincipal ventana = new VentanaPrincipal();
-
-	GestorBD g = new GestorBD();
-	g.crearBBDD();
-	try {
-		GestorBD.crear100UsuariosRandom();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	try {
-		for(User u:GestorBD.todosLosUsuarios()) {
-			System.out.println(u.toString());
+		try {
+			GestorBD.InitProductosMarcasSecciones();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-		
+		VentanaPrincipal ventana = new VentanaPrincipal();
 
 	}
 }
-	

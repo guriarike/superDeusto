@@ -1,6 +1,7 @@
 package es.deusto.prog3.gui;
 
 import java.awt.BorderLayout;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import es.deusto.prog3.g01.GestorBD;
+import es.deusto.prog3.g01.Producto;
 import es.deusto.prog3.g01.Seccion;
 import es.deusto.prog3.g01.User;
 
@@ -23,10 +26,12 @@ public class VentanaPrincipal extends JFrame{
 	int mouseRow = -1;
 	int mouseCol = -1;
 	private DefaultListModel<Seccion> mSeccion = new DefaultListModel<>();
+	private DefaultListModel<Seccion> mCarrito= new DefaultListModel<>();
 	private JList<Seccion> lSecciones = new JList<>( mSeccion );
+	private JList<Seccion> lCarrito = new JList<>( mCarrito );
 	
 	private DefaultTableModel mProductos = new DefaultTableModel(
-				new Object[] { "Id", "Nombre", "Marca","PrecioProducto","Seccion" }, 0
+				new Object[] { "Id", "Nombre", "Marca","PrecioProducto" }, 0
 			);
 	private JTable tProductos = new JTable( mProductos );
 	
@@ -49,6 +54,8 @@ public class VentanaPrincipal extends JFrame{
 			JPanel pSecciones = new JPanel( new BorderLayout() );
 			pSecciones.add( new JLabel( "Secciones:" ), BorderLayout.NORTH );
 			pSecciones.add( new JScrollPane(lSecciones), BorderLayout.CENTER );
+			pSecciones.add( new JLabel( "Productos en tu carrito:" ), BorderLayout.SOUTH);
+			pSecciones.add( new JScrollPane(lCarrito), BorderLayout.CENTER );
 			pOeste.setTopComponent( pSecciones );
 			getContentPane().add(pOeste,BorderLayout.WEST);
 		JPanel pPrincipal = new JPanel( new BorderLayout() ); // Panel central (tabla)
@@ -62,6 +69,19 @@ public class VentanaPrincipal extends JFrame{
 			getContentPane().add( pBotonera, BorderLayout.SOUTH );
 		this.setVisible(true);
 		
+		
+		
+		// INICIALIZAR CON DATOS
+		ArrayList<Producto> todosLosProductos = null;
+		try {
+			todosLosProductos = GestorBD.todosLosProductos();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
+		for (Producto p : todosLosProductos) {
+			this.mProductos.addRow( new Object[] {p.getIdProducto(), p.getNombreProducto(), p.getMarca(), p.getPrecioProducto()} );
+		}		
 		
 	}
 	
