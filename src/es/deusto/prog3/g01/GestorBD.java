@@ -30,7 +30,7 @@ public class GestorBD {
 		}
 	}
 
-	public void crearBBDD() {
+	public static void crearBBDD() {
 		// Se abre la conexión y se obtiene el Statement
 		// Al abrir la conexión, si no existía el fichero, se crea la base de datos
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {

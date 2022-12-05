@@ -1,173 +1,158 @@
 package es.deusto.prog3.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import java.awt.BorderLayout;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JButton;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
-public class VentanaRegistro {
+import es.deusto.prog3.g01.*;
 
-	private JFrame frame;
+public class VentanaRegistro extends JFrame {
+
+	private JPanel contentPane;
+
+	private JFrame frmVentanaRegistro;
 	private JTextField textField;
-	private JPasswordField passwordField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JLabel lblNewLabel_2;
-	private JTextField textField_3;
+	private JButton btnNewButton_2;
+	private JLabel lblNewLabel_3;
+	private JLabel lblNewLabel_4;
 	private JButton btnNewButton;
-	private JButton btnFinalizar;
+	private JTextField textField_1;
+	private JLabel lblNewLabel_5;
+	private JLabel lblNewLabel_6;
+	private JPasswordField passwordField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaRegistro window = new VentanaRegistro();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the application.
-	 */
+	
 	public VentanaRegistro() {
+		
+		GestorBD.crearBBDD();
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
+	
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		JLabel lblNewLabel = new JLabel("Ventana de Registro");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 20));
-		
-		JLabel lblNewLabel_1 = new JLabel("Nombre de usuario: ");
-		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 10));
-		
+		getContentPane().setBackground(new Color(0xffffbf));
+		setTitle("Registro");
+		setBounds(200, 200, 500, 300);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getContentPane().setLayout(null);
+
+		JLabel lblNewLabel = new JLabel("Super Deusto");
+		lblNewLabel.setBackground(new Color(0, 0, 0));
+		lblNewLabel.setFont(new Font("Raleway SemiBold", Font.ITALIC, 20));
+		lblNewLabel.setBounds(29, 24, 150, 25);
+		getContentPane().add(lblNewLabel);
+
+		JLabel lblNewLabel_1 = new JLabel("Correo");
+		lblNewLabel_1.setBounds(30, 91, 45, 13);
+		getContentPane().add(lblNewLabel_1);
+
+		JLabel lblNewLabel_2 = new JLabel("Nombre");
+		lblNewLabel_2.setBounds(29, 117, 79, 13);
+		getContentPane().add(lblNewLabel_2);
+
 		textField = new JTextField();
+		textField.setBackground(Color.WHITE);
+		getContentPane().add(textField);
 		textField.setColumns(10);
+
+		btnNewButton_2 = new JButton("Registrarse");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();				
+			}
+		});
+		btnNewButton_2.setBackground(SystemColor.desktop);
+		btnNewButton_2.setForeground(Color.GRAY);
+		btnNewButton_2.setBounds(294, 221, 120, 32);
+		getContentPane().add(btnNewButton_2);
+
+		lblNewLabel_3 = new JLabel("\u00BFYa est\u00E1s registrado? ");
+		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_3.setBounds(282, 93, 151, 32);
+		getContentPane().add(lblNewLabel_3);
+
+		lblNewLabel_4 = new JLabel(" Entra ahora");
+		lblNewLabel_4.setBounds(294, 114, 109, 32);
+		getContentPane().add(lblNewLabel_4);
+
+		btnNewButton = new JButton("Iniciar sesión");
 		
-		JLabel lblNewLabel_1_1 = new JLabel("Contraseña: ");
-		lblNewLabel_1_1.setFont(new Font("Arial", Font.PLAIN, 10));
 		
-		passwordField = new JPasswordField();
-		
-		JLabel lblNewLabel_1_2 = new JLabel("Nombre: ");
-		lblNewLabel_1_2.setFont(new Font("Arial", Font.PLAIN, 10));
-		
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				new VentanaInicioSesion();
+			}
+			
+			
+		});
+		btnNewButton.setForeground(Color.GRAY);
+		btnNewButton.setBackground(SystemColor.desktop);
+		btnNewButton.setBounds(294, 156, 124, 32);
+		getContentPane().add(btnNewButton);
+
+		JSeparator separator = new JSeparator();
+		separator.setBounds(10, 70, 466, 34);
+		getContentPane().add(separator);
+
 		textField_1 = new JTextField();
+		getContentPane().add(textField_1);
 		textField_1.setColumns(10);
-		
-		JLabel lblNewLabel_1_2_1 = new JLabel("Apellidos: ");
-		lblNewLabel_1_2_1.setFont(new Font("Arial", Font.PLAIN, 10));
-		
+
+		lblNewLabel_5 = new JLabel("Apellidos");
+		lblNewLabel_5.setBounds(29, 146, 66, 13);
+		getContentPane().add(lblNewLabel_5);
+
+		lblNewLabel_6 = new JLabel("Contraseña");
+		lblNewLabel_6.setBounds(29, 175, 75, 13);
+		getContentPane().add(lblNewLabel_6);
+
+		passwordField_1 = new JPasswordField();
+		passwordField_1.setBounds(105, 172, 119, 19);
+		getContentPane().add(passwordField_1);
+
 		textField_2 = new JTextField();
+		getContentPane().add(textField_2);
 		textField_2.setColumns(10);
 		
-		lblNewLabel_2 = new JLabel("DNI: ");
-		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 10));
-		
 		textField_3 = new JTextField();
+		getContentPane().add(textField_3);
 		textField_3.setColumns(10);
 		
-		btnNewButton = new JButton("Volver");
 		
-		btnFinalizar = new JButton("Registrarse");
-		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 450, GroupLayout.PREFERRED_SIZE)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblNewLabel_1_2, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
-					.addGap(6)
-					.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNewLabel_1_2_1, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel_2))
-					.addGap(6)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(lblNewLabel_1_1, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel_1))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(passwordField, 130, 130, 130)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(120))
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap(130, Short.MAX_VALUE)
-					.addComponent(btnNewButton)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnFinalizar)
-					.addGap(117))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(lblNewLabel)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(32)
-							.addComponent(lblNewLabel_1_2, GroupLayout.PREFERRED_SIZE, 13, GroupLayout.PREFERRED_SIZE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(24)
-							.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(8)
-							.addComponent(lblNewLabel_1_2_1, GroupLayout.PREFERRED_SIZE, 13, GroupLayout.PREFERRED_SIZE))
-						.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(16)
-							.addComponent(lblNewLabel_2))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-					.addGap(18)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblNewLabel_1)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblNewLabel_1_1, GroupLayout.PREFERRED_SIZE, 13, GroupLayout.PREFERRED_SIZE)
-						.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnNewButton)
-						.addComponent(btnFinalizar))
-					.addContainerGap())
-		);
-		frame.getContentPane().setLayout(groupLayout);
+		textField.setBounds(105, 88, 119, 19);
+		textField_2.setBounds(105, 114, 119, 19);
+		textField_1.setBounds(105, 143, 119, 19);
+		textField_3.setBounds(105, 200, 119, 19);
+		
+		lblNewLabel_3 = new JLabel("Telefono");
+		lblNewLabel_3.setBounds(29, 204, 66, 13);
+		getContentPane().add(lblNewLabel_3);
+				
+		
+		setVisible(true);
+
 	}
+	
 
 }
+
