@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 
-
 import es.deusto.prog3.g01.*;
 
 import java.awt.SystemColor;
@@ -35,12 +34,12 @@ import javax.swing.JComboBox;
 public class VentanaInicioSesion extends JFrame {
 
 	private JFrame frmVentanaInicioSesion;
-	private JTextField textField;
+	private JTextField textUsuario;
 	private JPasswordField passwordField;
-	private JButton btnNewButton_2;
+	private JButton btnEntrar;
 	private JLabel lblNewLabel_3;
 	private JLabel lblNewLabel_4;
-	private JButton btnNewButton;
+	private JButton btnCrear;
 
 	/**
 	 * Launch the application.
@@ -64,14 +63,8 @@ public class VentanaInicioSesion extends JFrame {
 	public VentanaInicioSesion() {
 		GestorBD.crearBBDD();
 		initialize();
-		
-		
-		
-		
-	}
-	
-	
 
+	}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -83,82 +76,83 @@ public class VentanaInicioSesion extends JFrame {
 		frmVentanaInicioSesion.setBounds(200, 200, 500, 300);
 		frmVentanaInicioSesion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmVentanaInicioSesion.getContentPane().setLayout(null);
-		
 
-		JLabel lblNewLabel = new JLabel("Super Deusto");
-		lblNewLabel.setBackground(new Color(0, 0, 0));
-		lblNewLabel.setFont(new Font("Raleway SemiBold", Font.ITALIC, 15));
-		lblNewLabel.setBounds(29, 24, 119, 25);
-		frmVentanaInicioSesion.getContentPane().add(lblNewLabel);
+		JLabel lblSuperDeusto = new JLabel("Super Deusto");
+		lblSuperDeusto.setBackground(new Color(0, 0, 0));
+		lblSuperDeusto.setFont(new Font("Raleway SemiBold", Font.ITALIC, 15));
+		lblSuperDeusto.setBounds(29, 24, 119, 25);
+		frmVentanaInicioSesion.getContentPane().add(lblSuperDeusto);
 
-		JLabel lblNewLabel_1 = new JLabel("Usuario");
-		lblNewLabel_1.setBounds(29, 103, 90, 13);
-		frmVentanaInicioSesion.getContentPane().add(lblNewLabel_1);
+		JLabel lblUsuario = new JLabel("Usuario");
+		lblUsuario.setBounds(29, 103, 90, 13);
+		frmVentanaInicioSesion.getContentPane().add(lblUsuario);
 
-		JLabel lblNewLabel_2 = new JLabel("Contraseña");
-		lblNewLabel_2.setBounds(29, 149, 79, 13);
-		frmVentanaInicioSesion.getContentPane().add(lblNewLabel_2);
+		JLabel lblContraseña = new JLabel("Contraseña");
+		lblContraseña.setBounds(29, 149, 79, 13);
+		frmVentanaInicioSesion.getContentPane().add(lblContraseña);
 
-		textField = new JTextField();
-		textField.setBackground(Color.WHITE);
-		textField.setBounds(105, 100, 119, 19);
-		frmVentanaInicioSesion.getContentPane().add(textField);
-		textField.setColumns(10);
+		textUsuario = new JTextField();
+		textUsuario.setBackground(Color.WHITE);
+		textUsuario.setBounds(105, 100, 119, 19);
+		frmVentanaInicioSesion.getContentPane().add(textUsuario);
+		textUsuario.setColumns(10);
 
 		passwordField = new JPasswordField();
 		passwordField.setBounds(105, 146, 119, 19);
 		frmVentanaInicioSesion.getContentPane().add(passwordField);
 
-		btnNewButton_2 = new JButton("Entrar");
-		btnNewButton_2.setBackground(SystemColor.desktop);
-		btnNewButton_2.setForeground(Color.GRAY);
-		btnNewButton_2.setBounds(105, 198, 119, 32);
-		
-		btnNewButton_2.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				
-				
+		btnEntrar = new JButton("Entrar");
+		btnEntrar.setBackground(SystemColor.desktop);
+		btnEntrar.setForeground(Color.GRAY);
+		btnEntrar.setBounds(105, 198, 119, 32);
 
-			}
-		});
-
-		frmVentanaInicioSesion.getContentPane().add(btnNewButton_2);
+		frmVentanaInicioSesion.getContentPane().add(btnEntrar);
 
 		lblNewLabel_3 = new JLabel("¿Nuevo en Super Deusto? \r\n");
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_3.setBounds(282, 93, 180, 32);
 		frmVentanaInicioSesion.getContentPane().add(lblNewLabel_3);
 
-		lblNewLabel_4 = new JLabel("Reg\u00EDstrate ahora");
+		lblNewLabel_4 = new JLabel("Registrate ahora");
 		lblNewLabel_4.setBounds(294, 114, 109, 32);
 		frmVentanaInicioSesion.getContentPane().add(lblNewLabel_4);
 
-		btnNewButton = new JButton("Crear cuenta");
-		btnNewButton.setForeground(Color.GRAY);
-		btnNewButton.setBackground(SystemColor.desktop);
-		btnNewButton.setBounds(294, 156, 124, 32);
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				new VentanaRegistro();
-			}
-		});
-		
-		
-		
-		
-
-		frmVentanaInicioSesion.getContentPane().add(btnNewButton);
-		
-		
+		btnCrear = new JButton("Crear cuenta");
+		btnCrear.setForeground(Color.GRAY);
+		btnCrear.setBackground(SystemColor.desktop);
+		btnCrear.setBounds(294, 156, 124, 32);
+		frmVentanaInicioSesion.getContentPane().add(btnCrear);
 
 		JSeparator separator = new JSeparator();
 		separator.setBounds(10, 70, 466, 34);
 		frmVentanaInicioSesion.getContentPane().add(separator);
 		frmVentanaInicioSesion.setVisible(true);
 
+		// BOTONES
+
+		btnEntrar.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				try {
+					GestorBD.existeUsuarioEnBBDD(textUsuario.getText(), passwordField.getText());
+					
+				}catch(Exception ee) {
+					
+				}
+				
+				
+				
+
+			}
+		});
+
+		btnCrear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				new VentanaRegistro();
+			}
+		});
+
 	}
-	
-	
+
 }

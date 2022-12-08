@@ -38,36 +38,36 @@ public class GestorBD {
 		// Al abrir la conexión, si no existía el fichero, se crea la base de datos
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 			String Producto = "CREATE TABLE IF NOT EXISTS PRODUCTO(\n" 
-					+ " ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ " NAME TEXT NOT NULL,\n" 
-					+ " PRECIO INT NOT NULL,\n"
-					+ " MARCA INT NOT NULL,\n"
-					+ " SECCION INT NOT NULL,\n"
-					+ " COMPRA INT NOT NULL,\n"
-					+ " FOREIGN KEY(MARCA) REFERENCES MARCA(ID) ON DELETE CASCADE,\n"
-					+ " FOREIGN KEY(SECCION) REFERENCES SECCION(ID) ON DELETE CASCADE,\n"
-					+ " FOREIGN KEY(COMPRA) REFERENCES COMPRA(ID) ON DELETE CASCADE"
+					+ " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+					+ " Nombre TEXT NOT NULL,\n" 
+					+ " Precio INT NOT NULL,\n"
+					+ " Marca INT NOT NULL,\n"
+					+ " Seccion INT NOT NULL,\n"
+					+ " Compra INT NOT NULL,\n"
+					+ " FOREIGN KEY(Marca) REFERENCES MARCA(id) ON DELETE CASCADE,\n"
+					+ " FOREIGN KEY(Seccion) REFERENCES SECCION(id) ON DELETE CASCADE,\n"
+					+ " FOREIGN KEY(Compra) REFERENCES COMPRA(id) ON DELETE CASCADE"
 					
 					
 					+ ");";
 			String Seccion = "CREATE TABLE IF NOT EXISTS SECCION(\n" 
-					+ " ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ " NAMESECCION TEXT NOT NULL);";
+					+ " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+					+ " NombreSeccion TEXT NOT NULL);";
 			String Marca = "CREATE TABLE IF NOT EXISTS MARCA(\n" 
-					+ "ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ "NAMEMARCA TEXT NOT NULL);";
+					+ "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+					+ "NombreMarca TEXT NOT NULL);";
 			String Compra = "CREATE TABLE IF NOT EXISTS COMPRA(\n" 
-					+ "ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ "FECHA DATE NOT NULL,\n" 
-					+ "PRECIO DOUBLE NOT NULL);";
+					+ "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+					+ "Fecha DATE NOT NULL,\n" 
+					+ "Precio DOUBLE NOT NULL);";
 
 			String sql = "CREATE TABLE IF NOT EXISTS USER (\n" 
-					+ " ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ " NAME TEXT NOT NULL,\n" 
-					+ " APELLIDO TEXT NOT NULL,\n" 
-					+ " FECHANACIMIENTO DATE,\n"
-					+ " USERNAME TEXT NOT NULL,\n" 
-					+ " PASSWORD TEXT NOT NULL);"+ Producto+Seccion+Marca+Compra;
+					+ " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+					+ " Nombre TEXT NOT NULL,\n" 
+					+ " Apellido TEXT NOT NULL,\n" 
+					+ " FechaNacimiento DATE,\n"
+					+ " Username TEXT NOT NULL,\n" 
+					+ " Contraseña TEXT NOT NULL);"+ Producto+Seccion+Marca+Compra;
 			stmt.executeUpdate(sql);
 			//stmt.executeUpdate(Producto);
 			//stmt.executeUpdate(Seccion);
@@ -133,7 +133,7 @@ public class GestorBD {
 				
 				
 				
-				String sql = "INSERT INTO USER (NAME,APELLIDO,USERNAME,PASSWORD)"
+				String sql = "INSERT INTO USER (Nombre,Apellido,Username,Contraseña)"
 						+ "VALUES('"+nombre+"','"+apellido+"','"+userName+"','"+contraseña+"');";
 				stmt.executeUpdate(sql);
 
@@ -144,14 +144,14 @@ public class GestorBD {
 		;
 
 	}
-	public static void insetarProductos(ArrayList<Producto> listaProductos) {
+	public static void insetarProductos(Producto... listaProductos) {
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 			for (Producto p : listaProductos) {
 				String nombre = p.getNombreProducto();
 				Double precio = p.getPrecioProducto();
 				int marca = p.getMarca().getIdMarca();
 				int seccion = p.getSeccion().getSeccionID();
-				String sql = "INSERT INTO PRODUCTO (NAME,MARCA,PRECIO,SECCION)"
+				String sql = "INSERT INTO PRODUCTO (Nombre,Marca,Precio,Seccion)"
 						+ "VALUES('"+nombre+"','"+marca+"','"+precio+"','"+seccion+"');";
 				
 				stmt.executeUpdate(sql);
@@ -266,11 +266,12 @@ public class GestorBD {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				User user = new User();
-				user.setNombre(rs.getString("NAME"));
-				user.setApellido(rs.getString("APELLIDO"));
+				user.setId_usuario(rs.getInt(0));
+				user.setNombre(rs.getString("Nombre"));
+				user.setApellido(rs.getString("Apellido"));
 				// user.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
-				user.setUserName(rs.getString("USERNAME"));
-				user.setUserContraseña("PASSWORD");
+				user.setUserName(rs.getString("Username"));
+				user.setUserContraseña("contraseña");
 				listaUsuarios.add(user);
 			}
 
@@ -286,10 +287,10 @@ public class GestorBD {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Producto p  = new Producto();
-				p.setNombreProducto(rs.getString("NAME"));
-				p.setPrecioProducto((Integer)rs.getInt("PRECIO"));
-				p.setMarca((Marca)rs.getObject("MARCA"));
-				p.setSeccion((Seccion)rs.getObject("SECCION"));
+				p.setNombreProducto(rs.getString("Nombre"));
+				p.setPrecioProducto((Integer)rs.getInt("Precio"));
+				p.setMarca((Marca)rs.getObject("Marca"));
+				p.setSeccion((Seccion)rs.getObject("Seccion"));
 				listaProductos.add(p);
 			}
 
@@ -297,7 +298,29 @@ public class GestorBD {
 		return listaProductos;
 
 	}
-
+	
+	
+	public static boolean existeUsuarioEnBBDD(String username, String contraseña) {
+		try {
+			ArrayList<User>usuarios = GestorBD.todosLosUsuarios();
+			for (User u:usuarios) {
+				if (u.getNombre()== username && u.getUserContraseña()==contraseña ) {
+					return true;
+				}else {
+					return false;
+				}
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		return false;
+	}
 	public static User usuarioPorUserName(String userName) throws SQLException {
 		User user = null;
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
@@ -307,11 +330,11 @@ public class GestorBD {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				user = new User();
-				user.setNombre(rs.getString("NAME"));
-				user.setApellido(rs.getString("APELLIDO"));
+				user.setNombre(rs.getString("Nombre"));
+				user.setApellido(rs.getString("Apellido"));
 				// user.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
-				user.setUserName(rs.getString("USERNAME"));
-				user.setUserContraseña("PASSWORD");
+				user.setUserName(rs.getString("Username"));
+				user.setUserContraseña("Contraseña");
 
 			}
 			return user;
@@ -319,7 +342,20 @@ public class GestorBD {
 		}
 	}
 
-
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 
+	  
+	 METODOS PARA CREAR DATOS PARA LA BBDD 
+	  
+	 * 
+	 * 
+	 * 
+	 * 
+	 * */
 	public static void crear100UsuariosRandom() throws SQLException {
 		ArrayList<User>listaUsuarios = null ;
 		int i = 100;
@@ -462,7 +498,7 @@ public class GestorBD {
 		listaProductos.add(p4);
 		listaProductos.add(p5);
 		try(Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()){
-			insetarProductos(listaProductos);
+			insetarProductos(p);
 				
 				
 			}
