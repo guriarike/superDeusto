@@ -20,6 +20,7 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		try {
+			GestorBD.crearBBDD();
 			GestorBD.InitProductosMarcasSecciones();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

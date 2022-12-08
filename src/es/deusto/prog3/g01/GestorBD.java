@@ -34,31 +34,45 @@ public class GestorBD {
 		// Se abre la conexión y se obtiene el Statement
 		// Al abrir la conexión, si no existía el fichero, se crea la base de datos
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
-			String Producto = "CREATE TABLE IF NOT EXISTS PRODUCTO(\n" + " ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ " NAME TEXT NOT NULL,\n" + "PRECIO DOUBLE NOT NULL,\n"
-					+ "MARCA INT FOREING KEY REFERENCES MARCA(ID),"
-					+ "SECCION INT FOREING KEY REFERENCES SECCION(ID),\n"
-					+ "COMPRA INT FOREING KEY REFERENCES COMPRA(ID)"
+			String Producto = "CREATE TABLE IF NOT EXISTS PRODUCTO(\n" 
+					+ " ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+					+ " NAME TEXT NOT NULL,\n" 
+					+ " PRECIO INT NOT NULL,\n"
+					+ " MARCA INT NOT NULL,\n"
+					+ " SECCION INT NOT NULL,\n"
+					+ " COMPRA INT NOT NULL,\n"
+					+ " FOREIGN KEY(MARCA) REFERENCES MARCA(ID) ON DELETE CASCADE,\n"
+					+ " FOREIGN KEY(SECCION) REFERENCES SECCION(ID) ON DELETE CASCADE,\n"
+					+ " FOREIGN KEY(COMPRA) REFERENCES COMPRA(ID) ON DELETE CASCADE"
 					
-					+ ")";
-			String Seccion = "CREATE TABLE IF NOT EXISTS SECCION(\n" + "ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ "NAMESECCION TEXT NOT NULL)";
-			String Marca = "CREATE TABLE IF NOT EXISTS MARCA(\n" + "ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ "NAMEMARCA TEXT NOT NULL)";
-			String Compra = "CREATE TABLE IF NOT EXISTS COMPRA(\n" + "ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ "FECHA DATE NOT NULL,\n" + "PRECIO DOUBLE NOT NULL)";
+					
+					+ ");";
+			String Seccion = "CREATE TABLE IF NOT EXISTS SECCION(\n" 
+					+ " ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+					+ " NAMESECCION TEXT NOT NULL);";
+			String Marca = "CREATE TABLE IF NOT EXISTS MARCA(\n" 
+					+ "ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+					+ "NAMEMARCA TEXT NOT NULL);";
+			String Compra = "CREATE TABLE IF NOT EXISTS COMPRA(\n" 
+					+ "ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+					+ "FECHA DATE NOT NULL,\n" 
+					+ "PRECIO DOUBLE NOT NULL);";
 
-			String sql = "CREATE TABLE IF NOT EXISTS USER (\n" + " ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ " NAME TEXT NOT NULL,\n" + "APELLIDO TEXT NOT NULL,\n" + "FECHANACIMIENTO DATE,\n"
-					+ "USERNAME TEXT NOT NULL,\n" + " PASSWORD TEXT NOT NULL)";
+			String sql = "CREATE TABLE IF NOT EXISTS USER (\n" 
+					+ " ID INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+					+ " NAME TEXT NOT NULL,\n" 
+					+ " APELLIDO TEXT NOT NULL,\n" 
+					+ " FECHANACIMIENTO DATE,\n"
+					+ " USERNAME TEXT NOT NULL,\n" 
+					+ " PASSWORD TEXT NOT NULL);"+ Producto+Seccion+Marca+Compra;
 			stmt.executeUpdate(sql);
-			stmt.executeUpdate(Producto);
-			stmt.executeUpdate(Seccion);
-			stmt.executeUpdate(Marca);
-			stmt.executeUpdate(Compra);
+			//stmt.executeUpdate(Producto);
+			//stmt.executeUpdate(Seccion);
+			//stmt.executeUpdate(Marca);
+			//stmt.executeUpdate(Compra);
 
 			if (!stmt.execute(sql)) {
-				System.out.println("- Se ha creado la tabla Cliente");
+				System.out.println("- Se ha creado la BBDD");
 			}
 		} catch (Exception ex) {
 			System.err.println(String.format("* Error al crear la BBDD: %s", ex.getMessage()));
@@ -110,11 +124,11 @@ public class GestorBD {
 			for (Producto p : listaProductos) {
 				String nombre = p.getNombreProducto();
 				Double precio = p.getPrecioProducto();
-				Marca marca = p.getMarca();
-				Seccion seccion = p.getSeccion();
-				String sql = "INSERT INTO PRODUCTO (NAME,PRECIO,MARCA,SECCION)"
-						+ "VALUES(%s,%d,%s,%s);";
-				String.format(sql,nombre,precio,marca,seccion);
+				int marca = p.getMarca().getIdMarca();
+				int seccion = p.getSeccion().getSeccionID();
+				String sql = "INSERT INTO PRODUCTO (NAME,MARCA,PRECIO,SECCION)"
+						+ "VALUES('"+nombre+"','"+marca+"','"+precio+"','"+seccion+"');";
+				
 				stmt.executeUpdate(sql);
 
 			}
@@ -145,10 +159,10 @@ public class GestorBD {
 
 	}
 	public static ArrayList<Producto> todosLosProductos() throws SQLException {
-		ArrayList<Producto> listaProductos = null;
+		ArrayList<Producto> listaProductos = new ArrayList<>();
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 
-			String sql = "SELECT * FROM USER";
+			String sql = "SELECT * FROM PRODUCTO";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Producto p  = new Producto();
@@ -326,7 +340,7 @@ public class GestorBD {
 		
 		Producto p = new Producto();
 		p.setNombreProducto("Leche semidesnatada");
-		p.setPrecioProducto(2.05);
+		p.setPrecioProducto(2);
 		p.setMarca(m);
 		p.setSeccion(s);
 		
@@ -338,7 +352,7 @@ public class GestorBD {
 		
 		Producto p1 = new Producto();
 		p1.setNombreProducto("Batido chocolate");
-		p1.setPrecioProducto(2.05);
+		p1.setPrecioProducto(2);
 		p1.setMarca(m1);
 		p1.setSeccion(s);
 		
@@ -352,7 +366,7 @@ public class GestorBD {
 		
 		Producto p2 = new Producto();
 		p2.setNombreProducto("Alitas de pollo");
-		p2.setPrecioProducto(8.05);
+		p2.setPrecioProducto(8);
 		p2.setMarca(m2);
 		p2.setSeccion(s1);
 		
@@ -364,7 +378,7 @@ public class GestorBD {
 		
 		Producto p3 = new Producto();
 		p3.setNombreProducto("Chuleta");
-		p3.setPrecioProducto(9.05);
+		p3.setPrecioProducto(9);
 		p3.setMarca(m3);
 		p3.setSeccion(s1);
 		
@@ -377,7 +391,7 @@ public class GestorBD {
 		
 		Producto p4 = new Producto();
 		p4.setNombreProducto("Pan Bimbo");
-		p4.setPrecioProducto(8.05);
+		p4.setPrecioProducto(8);
 		p4.setMarca(m2);
 		p4.setSeccion(s2);
 		
@@ -389,7 +403,7 @@ public class GestorBD {
 		
 		Producto p5 = new Producto();
 		p5.setNombreProducto("Bollos rellenos");
-		p5.setPrecioProducto(9.05);
+		p5.setPrecioProducto(9);
 		p5.setMarca(m3);
 		p5.setSeccion(s2);
 		

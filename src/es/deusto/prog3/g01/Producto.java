@@ -4,7 +4,7 @@ public class Producto {
 	private int idProducto;
 	private String nombreProducto;
 	private Marca marca;
-	private double precioProducto;
+	private int precioProducto;
 	private Seccion seccion;
 	
 	//constructor
@@ -56,7 +56,7 @@ public class Producto {
 		return precioProducto;
 	}
 
-	public void setPrecioProducto(double precioProducto) {
+	public void setPrecioProducto(int precioProducto) {
 		this.precioProducto = precioProducto;
 	}
 	
