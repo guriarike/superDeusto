@@ -30,6 +30,9 @@ public class GestorBD {
 		}
 	}
 
+	
+	
+	// METODO QUE CREA LA BASE DE DATOS
 	public static void crearBBDD() {
 		// Se abre la conexión y se obtiene el Statement
 		// Al abrir la conexión, si no existía el fichero, se crea la base de datos
@@ -80,6 +83,7 @@ public class GestorBD {
 		}
 	}
 
+	// METODO QUE BORRA LA BASE DE DATOS 
 	public void borrarBBDD() {
 		// Se abre la conexión y se obtiene el Statement
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
@@ -96,6 +100,27 @@ public class GestorBD {
 		}
 
 	}
+
+	
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 
+	  
+	 METODOS PARA INSERTAR DATOS A LA BBDD 
+	  
+	 * 
+	 * 
+	 * 
+	 * 
+	 * */
+	
+	
+	
+	
+	
 
 	// Metodo para insertar usuarios en la base de datos
 	public static void insertarUsuarios(User... listaUsuariosAInsertar ) {
@@ -136,90 +161,26 @@ public class GestorBD {
 			System.out.println(e);
 		}
 	}
-
-	// METODOS QUE DEVUELVEN COSAS DE LA BASE DE DATOS
-	public static ArrayList<User> todosLosUsuarios() throws SQLException {
-		ArrayList<User> listaUsuarios = null;
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
-
-			String sql = "SELECT * FROM USER";
-			ResultSet rs = stmt.executeQuery(sql);
-			while (rs.next()) {
-				User user = new User();
-				user.setNombre(rs.getString("NAME"));
-				user.setApellido(rs.getString("APELLIDO"));
-				// user.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
-				user.setUserName(rs.getString("USERNAME"));
-				user.setUserContraseña("PASSWORD");
-				listaUsuarios.add(user);
-			}
-
-		}
-		return listaUsuarios;
-
-	}
-	public static ArrayList<Producto> todosLosProductos() throws SQLException {
-		ArrayList<Producto> listaProductos = new ArrayList<>();
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
-
-			String sql = "SELECT * FROM PRODUCTO";
-			ResultSet rs = stmt.executeQuery(sql);
-			while (rs.next()) {
-				Producto p  = new Producto();
-				p.setNombreProducto(rs.getString("NAME"));
-				p.setPrecioProducto((Integer)rs.getInt("PRECIO"));
-				p.setMarca((Marca)rs.getObject("MARCA"));
-				p.setSeccion((Seccion)rs.getObject("SECCION"));
-				listaProductos.add(p);
-			}
-
-		}
-		return listaProductos;
-
-	}
-
-	public static User usuarioPorUserName(String userName) throws SQLException {
-		User user = null;
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
-
-			String sql = "SELECT * FROM USER WHERE USERNAME = %s";
-			String.format(sql, userName);
-			ResultSet rs = stmt.executeQuery(sql);
-			while (rs.next()) {
-				user = new User();
-				user.setNombre(rs.getString("NAME"));
-				user.setApellido(rs.getString("APELLIDO"));
-				// user.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
-				user.setUserName(rs.getString("USERNAME"));
-				user.setUserContraseña("PASSWORD");
-
-			}
-			return user;
-
-		}
-	}
-
+	
+	
+	
+	
 	/*
 	 * 
 	 * 
 	 * 
 	 * 
+	 
+	  
+	 METODOS PARA INSERTAR DATOS O DEVOLVER DATOS  BBDD 
+	 
+	 USANDO CSVs
+	  
 	 * 
 	 * 
 	 * 
 	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-	// Metodos para leer y creer CSVs y para crear usuarios y productos
+	 * */
 	public static ArrayList<User> crearListaDeUsuariosConCSV(String ruta) {
 		ArrayList<User> listaUsuarios = null;
 		try {
@@ -281,6 +242,83 @@ public class GestorBD {
 		}
 
 	}
+
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 
+	  
+	 METODOS PARA DEVOLVER DATOS DE LA BBDD 
+	  
+	 * 
+	 * 
+	 * 
+	 * 
+	 * */
+	
+	public static ArrayList<User> todosLosUsuarios() throws SQLException {
+		ArrayList<User> listaUsuarios = null;
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+
+			String sql = "SELECT * FROM USER";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				User user = new User();
+				user.setNombre(rs.getString("NAME"));
+				user.setApellido(rs.getString("APELLIDO"));
+				// user.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
+				user.setUserName(rs.getString("USERNAME"));
+				user.setUserContraseña("PASSWORD");
+				listaUsuarios.add(user);
+			}
+
+		}
+		return listaUsuarios;
+
+	}
+	public static ArrayList<Producto> todosLosProductos() throws SQLException {
+		ArrayList<Producto> listaProductos = new ArrayList<>();
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+
+			String sql = "SELECT * FROM PRODUCTO";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				Producto p  = new Producto();
+				p.setNombreProducto(rs.getString("NAME"));
+				p.setPrecioProducto((Integer)rs.getInt("PRECIO"));
+				p.setMarca((Marca)rs.getObject("MARCA"));
+				p.setSeccion((Seccion)rs.getObject("SECCION"));
+				listaProductos.add(p);
+			}
+
+		}
+		return listaProductos;
+
+	}
+
+	public static User usuarioPorUserName(String userName) throws SQLException {
+		User user = null;
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+
+			String sql = "SELECT * FROM USER WHERE USERNAME = %s";
+			String.format(sql, userName);
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				user = new User();
+				user.setNombre(rs.getString("NAME"));
+				user.setApellido(rs.getString("APELLIDO"));
+				// user.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
+				user.setUserName(rs.getString("USERNAME"));
+				user.setUserContraseña("PASSWORD");
+
+			}
+			return user;
+
+		}
+	}
+
 
 	public static void crear100UsuariosRandom() throws SQLException {
 		ArrayList<User>listaUsuarios = null ;
