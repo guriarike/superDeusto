@@ -1,23 +1,53 @@
 package es.deusto.prog3.g01;
-import java.time.LocalDateTime;
-import java.util.Date;
+
+import java.util.regex.Pattern;
 
 public class Persona {
+	private int id;
+	private String correo;
 	private String nombre;
 	private String apellido;
-	private LocalDateTime fechaNacimiento;
+	private String contrasena;
 	
 	
 	
-	
-	/*public Persona(String nombre, String apellido, LocalDateTime fechaNacimiento2) {
+	public Persona(int id, String correo, String contrasena, String nombre, String apellido) throws MiExcepcionExplicita {
 		super();
-		this.nombre = nombre;
-		this.apellido = apellido;
-		this.fechaNacimiento = fechaNacimiento2;
+		id = id;
+		String er = "[A-Z,a-z]{3,20}@gmail.com";
+		boolean correoCorrecto = Pattern.matches(er, correo);
+		if (!correoCorrecto) {
+			throw new MiExcepcionExplicita("El correo no tiene el formato adecuado");
+		}
+		correo = correo;
+		contrasena = contrasena;
+		nombre = nombre;
+		apellido = apellido;
 	}
-	*/
+	
+	
 	//getters y setters
+
+	public String getContrasena() {
+		return contrasena;
+	}
+
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
+	}
+
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getCorreo() {
+		return correo;
+	}
+	public void setCorreo(String correo) {
+		this.correo = correo;
+	}
 	public String getNombre() {
 		return nombre;
 	}
@@ -30,15 +60,10 @@ public class Persona {
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
-	public LocalDateTime getFechaNacimiento() {
-		return fechaNacimiento;
-	}
-	public void setFechaNacimiento(LocalDateTime fechaNacimiento) {
-		this.fechaNacimiento = fechaNacimiento;
-	}
+	
 	@Override
 	public String toString() {
-		return "Persona [nombre=" + nombre + ", apellido=" + apellido + ", fechaNacimiento=" + fechaNacimiento + "]";
+		return "Persona [correo=" + correo + ", nombre=" + nombre + ", apellido=" + apellido + "]";
 	}
 	
 	

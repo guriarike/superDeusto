@@ -49,25 +49,6 @@ public class PersonaTest {
 	
 	
 	@Test
-	public void testGetFechaNacimiento() {
-		assertEquals(fechaNacimiento, persona.getFechaNacimiento());
-	}
-	
-/*
-	@Test
-	public void testSetFechaNacimiento() {
-		LocalDateTime newFechaNacimiento = ; 
-		
-		assertEquals(fechaNacimiento, persona.getFechaNacimiento(),"");
-		persona.setFechaNacimiento();
-		assertEquals(newFechaNacimiento, persona.getFechaNacimiento(), "");
-		
-		
-	}
-	
-*/
-	
-	@Test
 	public void testToString() {
 		String toString = "Persona [nombre=" + nombre + ", apellido=" + apellido + ", fechaNacimiento=" + fechaNacimiento + "]";
 		

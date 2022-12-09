@@ -6,63 +6,63 @@ import org.junit.Test;
 
 public class UserTest {
 	
-	private User user;
-	private String userName = "aaa";
-	private int id_usuario = 123;
-	private String userContraseña = "bbb" ;
+	private Usuario usuario;
+	private String nombre = "aaa";
+	private int id = 123;
+	private String contrasena = "bbb" ;
 
 	@Test
 	public void testGetUserName() {
-		assertEquals(userName, user.getUserName());
+		assertEquals(nombre, usuario.getNombre());
 	}
 	
 	@Test
 	public void testSetUserName() {
 		String newUserName = "aaa";
 		
-		assertEquals(userName, user.getUserName(),"");
-		user.setUserName(newUserName);
-		assertEquals(newUserName, user.getUserName(), "");
+		assertEquals(nombre, usuario.getNombre(),"");
+		usuario.setNombre(newUserName);
+		assertEquals(newUserName, usuario.getNombre(), "");
 		
 	}
 	
 	
 	@Test
 	public void testGetId_usuario() {
-		assertEquals(id_usuario, user.getId_usuario());
+		assertEquals(id, usuario.getId());
 	}
 	
 	@Test
 	public void testSetId_usuario() {
-		int newId_usuario = 123;
+		int newId = 123;
 		
-		assertEquals(id_usuario, user.getId_usuario(), 0);
-		user.setId_usuario(newId_usuario);
-		assertEquals(newId_usuario, user.getId_usuario(), 0);
+		assertEquals(id, usuario.getId(), 0);
+		usuario.setId(newId);
+		assertEquals(newId, usuario.getId(), 0);
 		
 	}
 	
 	
 	@Test
 	public void testGetUserContraseña() {
-		assertEquals(userContraseña, user.getUserContraseña());
+		assertEquals(contrasena, usuario.getContrasena());
 	}
 	
 	@Test
 	public void testSetUserContraseña() {
-		String newUserContraseña = "bbb";
+		String newContraseña = "bbb";
 		
-		assertEquals(userContraseña, user.getUserContraseña(),"");
-		user.setUserContraseña(newUserContraseña);
-		assertEquals(newUserContraseña, user.getUserContraseña(), "");
+		assertEquals(contrasena, usuario.getContrasena(),"");
+		usuario.setContrasena(newContraseña);
+		assertEquals(newContraseña, usuario.getContrasena(), "");
 		
 	}
 	
 	
 	@Test
 	public void testToString() {
-		String toString = "User [userName=" + userName + ", id_usuario=" + id_usuario + "]";
+		String toString = "User [nombre=" + nombre + ", id=" + id + "]";
 		
-		assertEquals(toString, user.toString());
+		assertEquals(toString, usuario.toString());
 	}
 }

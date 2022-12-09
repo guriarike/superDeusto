@@ -123,18 +123,18 @@ public class GestorBD {
 	
 
 	// Metodo para insertar usuarios en la base de datos
-	public static void insertarUsuarios(User... listaUsuariosAInsertar ) {
+	public static void insertarUsuarios(Usuario... listaUsuariosAInsertar ) {
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
-			for (User u : listaUsuariosAInsertar) {
+			for (Usuario u : listaUsuariosAInsertar) {
 				String nombre = u.getNombre();
 				String apellido = u.getApellido();
-				String userName = u.getUserName();
-				String contraseña = u.getUserContraseña();
+				String contrasena = u.getContrasena();
+				String correo = u.getCorreo();
 				
 				
 				
-				String sql = "INSERT INTO USER (Nombre,Apellido,Username,Contraseña)"
-						+ "VALUES('"+nombre+"','"+apellido+"','"+userName+"','"+contraseña+"');";
+				String sql = "INSERT INTO USER (Nombre,Apellido,Correo,Contraseña)"
+						+ "VALUES('"+nombre+"','"+apellido+"','"+ correo+"','"+contrasena+"');";
 				stmt.executeUpdate(sql);
 
 			}
@@ -213,7 +213,7 @@ public class GestorBD {
 
 			}
 			System.out.println("NOMBRES:");
-			for (User u : listaUsuarios) {
+			for (Usuario u : listaUsuarios) {
 				System.out.println("#" + u.getNombre());
 			}
 
@@ -224,15 +224,15 @@ public class GestorBD {
 
 	}
 
-	public static void crearCSVusuarios(ArrayList<User> listaUsuarios, String rutaNuevoFichero) {
+	public static void crearCSVusuarios(ArrayList<Usuario> listaUsuarios, String rutaNuevoFichero) {
 		try {
 			// Creamos el escritor
 			File file = new File(rutaNuevoFichero);
 			PrintWriter pr = new PrintWriter(file);
 			// Recorremos los usuarios uno por uno
-			for (User u : listaUsuarios) {
-				pr.println("" + u.getNombre() + ";" + u.getApellido() + ";" + u.getFechaNacimiento() + ";"
-						+ u.getUserName() + ";" + u.getId_usuario());
+			for (Usuario u : listaUsuarios) {
+				pr.println("" + u.getNombre() + ";" + u.getApellido() + ";" + u.getCorreo() + ";"
+						+ u.getContrasena() + ";" + u.getId());
 				// comprobacion
 				System.out.println("#" + u.getNombre());
 			}
@@ -258,21 +258,21 @@ public class GestorBD {
 	 * 
 	 * */
 	
-	public static ArrayList<User> todosLosUsuarios() throws SQLException {
-		ArrayList<User> listaUsuarios = null;
+	public static ArrayList<Usuario> todosLosUsuarios() throws SQLException {
+		ArrayList<Usuario> listaUsuarios = null;
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 
 			String sql = "SELECT * FROM USER";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				User user = new User();
-				user.setId_usuario(rs.getInt(0));
-				user.setNombre(rs.getString("Nombre"));
-				user.setApellido(rs.getString("Apellido"));
+				Usuario usuario = new Usuario();
+				usuario.setId(rs.getInt(0));
+				usuario.setNombre(rs.getString("Nombre"));
+				usuario.setApellido(rs.getString("Apellido"));
 				// user.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
-				user.setUserName(rs.getString("Username"));
-				user.setUserContraseña("contraseña");
-				listaUsuarios.add(user);
+				usuario.setCorreo(rs.getString("guri@gmail.com"));
+				usuario.setContrasena("contrasena");
+				listaUsuarios.add(usuario);
 			}
 
 		}
@@ -300,11 +300,11 @@ public class GestorBD {
 	}
 	
 	
-	public static boolean existeUsuarioEnBBDD(String username, String contraseña) {
+	public static boolean existeUsuarioEnBBDD(String nombre, String contrasena) {
 		try {
-			ArrayList<User>usuarios = GestorBD.todosLosUsuarios();
-			for (User u:usuarios) {
-				if (u.getNombre()== username && u.getUserContraseña()==contraseña ) {
+			ArrayList<Usuario>usuarios = GestorBD.todosLosUsuarios();
+			for (Usuario u:usuarios) {
+				if (u.getNombre()== nombre && u.getContrasena()==contrasena ) {
 					return true;
 				}else {
 					return false;
@@ -321,23 +321,23 @@ public class GestorBD {
 		
 		return false;
 	}
-	public static User usuarioPorUserName(String userName) throws SQLException {
-		User user = null;
+	public static Usuario usuarioPorUserName(String userName) throws SQLException {
+		Usuario usuario = null;
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 
 			String sql = "SELECT * FROM USER WHERE USERNAME = %s";
 			String.format(sql, userName);
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				user = new User();
-				user.setNombre(rs.getString("Nombre"));
-				user.setApellido(rs.getString("Apellido"));
+				usuario = new Usuario();
+				usuario.setNombre(rs.getString("Nombre"));
+				usuario.setApellido(rs.getString("Apellido"));
 				// user.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
-				user.setUserName(rs.getString("Username"));
-				user.setUserContraseña("Contraseña");
+				usuario.setCorreo(rs.getString("guri@gmail.com"));
+				usuario.setContrasena("Contrasena");
 
 			}
-			return user;
+			return usuario;
 
 		}
 	}
@@ -357,7 +357,7 @@ public class GestorBD {
 	 * 
 	 * */
 	public static void crear100UsuariosRandom() throws SQLException {
-		ArrayList<User>listaUsuarios = null ;
+		ArrayList<Usuario>listaUsuarios = null ;
 		int i = 100;
 		String[] posiblesNombres = { "Guria", "Jon_Ander", "Jon", "Iker", "Asier", "Iñigo", "Roberto", "Ander", "Unai",
 				"Oier", "Julen", "Aingeru", "Biggie", "Yago", "Veronica", "Hairong", "Angela", "Sara", "Janire",
@@ -382,12 +382,10 @@ public class GestorBD {
 				// System.out.println("NOMBRE :"+ randomNombre);
 				// System.out.println("APELLIDO :"+ randomApellido);
 				System.out.println("#######################################");
-				User u = new User();
+				Usuario u = new Usuario();
 				u.setNombre(randomNombre);
 				u.setApellido(randomApellido);
-				u.setFechaNacimiento(null);
-				u.setUserName(userName);
-				u.setUserContraseña(contraseña);
+				u.setContrasena(contraseña);
 				insertarUsuarios(u);
 			}
 			

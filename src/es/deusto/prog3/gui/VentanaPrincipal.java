@@ -19,10 +19,10 @@ import javax.swing.table.DefaultTableModel;
 import es.deusto.prog3.g01.GestorBD;
 import es.deusto.prog3.g01.Producto;
 import es.deusto.prog3.g01.Seccion;
-import es.deusto.prog3.g01.User;
+import es.deusto.prog3.g01.Usuario;
 
 public class VentanaPrincipal extends JFrame{
-	private List<User>lUsuarios;
+	private List<Usuario>lUsuarios;
 	int mouseRow = -1;
 	int mouseCol = -1;
 	private DefaultListModel<Seccion> mSeccion = new DefaultListModel<>();
