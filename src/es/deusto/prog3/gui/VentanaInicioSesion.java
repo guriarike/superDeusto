@@ -70,6 +70,7 @@ public class VentanaInicioSesion extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		JFrame ventanaActual = this;
 		frmVentanaInicioSesion = new JFrame();
 		frmVentanaInicioSesion.getContentPane().setBackground(new Color(0xffffbf));
 		frmVentanaInicioSesion.setTitle("Inicio sesion");
@@ -134,7 +135,12 @@ public class VentanaInicioSesion extends JFrame {
 
 			public void actionPerformed(ActionEvent e) {
 				try {
-					GestorBD.existeUsuarioEnBBDD(textUsuario.getText(), passwordField.getText());
+					if(GestorBD.existeUsuarioEnBBDD(textUsuario.getText(), passwordField.getText())) {
+						VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(GestorBD.usuarioPorCorreo(textUsuario.getText()), ventanaActual);
+						ventanaPrincipal.setVisible(true);
+					}else {
+						System.out.println("Error en la contraseña o usuario");
+					}
 					
 				}catch(Exception ee) {
 					

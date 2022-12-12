@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -38,34 +39,33 @@ public class GestorBD {
 					+ " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
 					+ " Nombre TEXT NOT NULL,\n" 
 					+ " Precio INTEGER NOT NULL,\n"
-					+ " Marca INTEGER NOT NULL,\n"
+					+ " Marca TEXT NOT NULL,\n"
 					+ " Seccion INTEGER NOT NULL,\n"
-					+ " FOREIGN KEY(Marca) REFERENCES MARCA(id) ON DELETE CASCADE,\n"
+					
 					+ " FOREIGN KEY(Seccion) REFERENCES SECCION(id) ON DELETE CASCADE);";
 			
 			String seccion = "CREATE TABLE IF NOT EXISTS SECCION(\n" 
 					+ " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
 					+ " NombreSeccion TEXT NOT NULL);";
 			
-			String marca = "CREATE TABLE IF NOT EXISTS MARCA(\n" 
-					+ "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-					+ "NombreMarca TEXT NOT NULL);";
+			
 			
 			String compra = "CREATE TABLE IF NOT EXISTS COMPRA(\n" 
 					+ "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
 					+ "Fecha DATE NOT NULL,\n" 
 					+ "Precio DOUBLE NOT NULL);";
 
-			String user = "CREATE TABLE IF NOT EXISTS USER (\n" 
-					+ " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+			String usuario = "CREATE TABLE IF NOT EXISTS USUARIO (\n" 
+					+ " id INTEGER,\n"
+					+ " Correo TEXT NOT NULL,\n"
 					+ " Nombre TEXT NOT NULL,\n" 					
 					+ " Apellido TEXT NOT NULL,\n" 
-					+ " FechaNacimiento DATE NOT NULL,\n"
-					+ " Username TEXT NOT NULL,\n" 
-					+ " Contraseña TEXT NOT NULL);";
+					+ " FechaNacimiento DATE NOT NULL,\n" 
+					+ " Contraseña TEXT NOT NULL,\n"
+					+ " PRIMARY KEY(id,Correo));";
 			
 
-			if (!stmt.execute(user) && !stmt.execute(seccion) && !stmt.execute(marca) && !stmt.execute(compra) && !stmt.execute(producto)) {
+			if (!stmt.execute(usuario) && !stmt.execute(seccion)  && !stmt.execute(compra) && !stmt.execute(producto)) {
 				System.out.println("- Se ha creado la BBDD");
 			}
 		} catch (Exception ex) {
@@ -75,7 +75,7 @@ public class GestorBD {
 	}
 
 	// METODO QUE BORRA LA BASE DE DATOS
-	public void borrarBBDD() {
+	public static void borrarBBDD() {
 		// Se abre la conexión y se obtiene el Statement
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 
@@ -90,6 +90,15 @@ public class GestorBD {
 			ex.printStackTrace();
 		}
 
+	}
+	
+	public static void borrarProductos() {
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+			String sql = "DELETE  * FROM PRODUCTO";
+		}catch(Exception e) {
+			System.out.println(e);
+			
+		}
 	}
 
 	/*
@@ -111,12 +120,16 @@ public class GestorBD {
 	public static void insertarUsuarios(Usuario... listaUsuariosAInsertar) {
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 			for (Usuario u : listaUsuariosAInsertar) {
+				int id = u.getId();
 				String nombre = u.getNombre();
 				String apellido = u.getApellido();
 				String contrasena = u.getContrasena();
 				String correo = u.getCorreo();
+				int telefono = u.getTelefono();
+				
+				
 
-				String sql = "INSERT INTO USER (Nombre,Apellido,Correo,Contraseña)" + "VALUES('" + nombre + "','"
+				String sql = "INSERT INTO USUARIO (id,Nombre,Apellido,Correo,Contraseña)" + "VALUES('"+id+"" + nombre + "','"
 						+ apellido + "','" + correo + "','" + contrasena + "');";
 				stmt.executeUpdate(sql);
 
@@ -131,8 +144,8 @@ public class GestorBD {
 			for (Producto p : listaProductos) {
 				String nombre = p.getNombreProducto();
 				Double precio = p.getPrecioProducto();
-				int marca = p.getMarca().getIdMarca();
-				int seccion = p.getSeccion().getSeccionID();
+				String marca = p.getMarca();
+				String seccion = p.getSeccion();
 				String sql = "INSERT INTO PRODUCTO (Nombre,Marca,Precio,Seccion)" + "VALUES('" + nombre + "','" + marca
 						+ "','" + precio + "','" + seccion + "');";
 
@@ -141,6 +154,21 @@ public class GestorBD {
 			}
 		} catch (Exception e) {
 			System.out.println(String.format("Error insertando productos: ", e.getMessage()));
+			e.printStackTrace();
+		}
+	}
+	public static void insetarSeccion(Seccion... listaSecciones) {
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+			for (Seccion s : listaSecciones) {
+				String nombre = s.getNombre();
+				
+				String sql = "INSERT INTO SECCION (NombreSeccion)" + "VALUES('" + nombre + "');";
+
+				stmt.executeUpdate(sql);
+
+			}
+		} catch (Exception e) {
+			System.out.println(String.format("Error insertando secciones: ", e.getMessage()));
 			e.printStackTrace();
 		}
 	}
@@ -244,16 +272,16 @@ public class GestorBD {
 		ArrayList<Usuario> listaUsuarios = new ArrayList<>();
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 
-			String sql = "SELECT * FROM USER";
+			String sql = "SELECT * FROM USUARIO";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				//ERROR: No había constructor sin parámetros para la clase Usuario
 				Usuario usuario = new Usuario();
-				usuario.setId(rs.getInt(0));
+				usuario.setId(rs.getInt("id"));
 				usuario.setNombre(rs.getString("Nombre"));
 				usuario.setApellido(rs.getString("Apellido"));
 				// user.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
-				usuario.setCorreo(rs.getString("guri@gmail.com"));
+				usuario.setCorreo(rs.getString("Correo"));
 				usuario.setContrasena("contrasena");
 				listaUsuarios.add(usuario);
 			}
@@ -277,8 +305,8 @@ public class GestorBD {
 				Producto p = new Producto();
 				p.setNombreProducto(rs.getString("Nombre"));
 				p.setPrecioProducto((Integer) rs.getInt("Precio"));
-				p.setMarca((Marca) rs.getObject("Marca"));
-				p.setSeccion((Seccion) rs.getObject("Seccion"));
+				p.setMarca( rs.getString("Marca"));
+				p.setSeccion( rs.getString("Seccion"));
 				listaProductos.add(p);
 			}
 
@@ -289,12 +317,31 @@ public class GestorBD {
 		return listaProductos;
 
 	}
+	public static ArrayList<Seccion> todosLasSeccion() throws SQLException {
+		ArrayList<Seccion> listaSecciones = new ArrayList<>();
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 
-	public static boolean existeUsuarioEnBBDD(String nombre, String contrasena) {
+			String sql = "SELECT * FROM SECCION";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				Seccion s = new Seccion();
+				s.setNombre(rs.getString("NombreSeccion"));
+				
+				listaSecciones.add(s);
+			}
+
+		} catch (Exception e) {
+			System.out.println(String.format("Error todos los productos: ", e.getMessage()));
+			e.printStackTrace();
+		}
+		return listaSecciones;
+
+	}
+	public static boolean existeUsuarioEnBBDD(String correo, String contrasena) {
 		try {
 			ArrayList<Usuario> usuarios = GestorBD.todosLosUsuarios();
 			for (Usuario u : usuarios) {
-				if (u.getNombre() == nombre && u.getContrasena() == contrasena) {
+				if (u.getCorreo() == correo && u.getContrasena() == contrasena) {
 					return true;
 				} else {
 					return false;
@@ -309,19 +356,19 @@ public class GestorBD {
 		return false;
 	}
 
-	public static Usuario usuarioPorUserName(String userName) throws SQLException {
+	public static Usuario usuarioPorCorreo(String correo) throws SQLException {
 		Usuario usuario = null;
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 
-			String sql = "SELECT * FROM USER WHERE USERNAME = %s";
-			String.format(sql, userName);
+			String sql = "SELECT * FROM USUARIO WHERE Correo = '"+correo+"'";
+			
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				usuario = new Usuario();
 				usuario.setNombre(rs.getString("Nombre"));
 				usuario.setApellido(rs.getString("Apellido"));
 				// user.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
-				usuario.setCorreo(rs.getString("guri@gmail.com"));
+				usuario.setCorreo(rs.getString("Correo"));
 				usuario.setContrasena("Contrasena");
 
 			}
@@ -383,95 +430,121 @@ public class GestorBD {
 
 	// Inicializador de secciones Marcas y Productos
 	public static void InitProductosMarcasSecciones() throws SQLException {
+		
+		
 
 		ArrayList<Producto> listaProductos = new ArrayList<>();
-		ArrayList<Marca> listaMarcas = new ArrayList<>();
-		ArrayList<Seccion> listaSecciones = new ArrayList<>();
+		
+		
 
-		Seccion s = new Seccion();
-		s.setNombre("Lacteos");
+		
 
-		Marca m = new Marca();
-		m.setNombreMarca("Pascual");
+		
 
 		Producto p = new Producto();
 		p.setNombreProducto("Leche semidesnatada");
 		p.setPrecioProducto(2);
-		p.setMarca(m);
-		p.setSeccion(s);
-
-		Marca m1 = new Marca();
-		m1.setNombreMarca("Puleva");
+		p.setMarca("Pascual");
+		p.setSeccion("Lacteos");
+ 
+	
 
 		Producto p1 = new Producto();
 		p1.setNombreProducto("Batido chocolate");
-		p1.setPrecioProducto(2);
-		p1.setMarca(m1);
-		p1.setSeccion(s);
+		p1.setPrecioProducto(3);
+		p1.setMarca("Puleva");
+		p1.setSeccion("Lacteos");
 
 		// ######################################################
-		Seccion s1 = new Seccion();
-		s1.setNombre("Carnes");
+		
 
-		Marca m2 = new Marca();
-		m2.setNombreMarca("KFC");
+		
 
 		Producto p2 = new Producto();
 		p2.setNombreProducto("Alitas de pollo");
 		p2.setPrecioProducto(8);
-		p2.setMarca(m2);
-		p2.setSeccion(s1);
+		p2.setMarca("Pollo S.L");
+		p2.setSeccion("Carne");
 
-		Marca m3 = new Marca();
-		m3.setNombreMarca("Eusko carne");
+		
 
 		Producto p3 = new Producto();
 		p3.setNombreProducto("Chuleta");
 		p3.setPrecioProducto(9);
-		p3.setMarca(m3);
-		p3.setSeccion(s1);
+		p3.setMarca("Eusko Meat");
+		p3.setSeccion("Carne");
 
 		// ######################################################
-		Seccion s2 = new Seccion();
-		s2.setNombre("Panaderia y bolleria");
+		
 
-		Marca m4 = new Marca();
-		m4.setNombreMarca("Bimbo");
+		
 
 		Producto p4 = new Producto();
 		p4.setNombreProducto("Pan Bimbo");
 		p4.setPrecioProducto(8);
-		p4.setMarca(m2);
-		p4.setSeccion(s2);
+		p4.setMarca("Bimbo");
+		p4.setSeccion("Panaderia y Bolleria");
 
-		Marca m5 = new Marca();
-		m5.setNombreMarca("Nutela");
+		
 
 		Producto p5 = new Producto();
 		p5.setNombreProducto("Bollos rellenos");
 		p5.setPrecioProducto(9);
-		p5.setMarca(m3);
-		p5.setSeccion(s2);
+		p5.setMarca("Weikis");
+		p5.setSeccion("Panaderia y Bolleria");
 
-		listaSecciones.add(s);
-		listaSecciones.add(s1);
-		listaSecciones.add(s2);
-		listaMarcas.add(m);
-		listaMarcas.add(m1);
-		listaMarcas.add(m2);
-		listaMarcas.add(m3);
-		listaMarcas.add(m4);
-		listaMarcas.add(m5);
-		listaProductos.add(p);
-		listaProductos.add(p1);
-		listaProductos.add(p2);
-		listaProductos.add(p3);
-		listaProductos.add(p4);
-		listaProductos.add(p5);
+		
+		
+		Seccion s = new Seccion();
+		s.setNombre("Lacteos");
+		
+		Seccion s1 = new Seccion();
+		s.setNombre("Carne");
+		
+		Seccion s2 = new Seccion();
+		s.setNombre("Panaderia y Bolleria");
+		
+		
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 			insetarProductos(p);
+			insetarProductos(p1);
+			insetarProductos(p2);
+			insetarProductos(p3);
+			insetarProductos(p4);
+			insetarProductos(p5);
+			
+			
+			insetarSeccion(s);
+			insetarSeccion(s1);
+			insetarSeccion(s2);
+			
 
 		}
+	}
+	
+	public static void InitUsuarios() {
+		
+		
+		Usuario u = new Usuario();
+		u.setId(1);
+		u.setNombre("guria");
+		u.setApellido("rike");
+		u.setCorreo("guriarike@opendeusto.es");
+		u.setContrasena("contraseña");
+		u.setTelefono(688895837);
+		u.setCodigoPostal(48600);
+		
+		Usuario u2 = new Usuario();
+		u2.setId(1);
+		u2.setNombre("jonander");
+		u2.setApellido("gallastegi");
+		u2.setCorreo("jonan@opendeusto.es");
+		u.setContrasena("contraseña2");
+		u2.setTelefono(688895837);
+		u2.setCodigoPostal(48600);
+		
+		insertarUsuarios(u);
+		insertarUsuarios(u2);
 	}
 
 }

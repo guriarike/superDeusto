@@ -1,6 +1,13 @@
 package es.deusto.prog3.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.TextField;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import es.deusto.prog3.g01.GestorBD;
@@ -26,19 +35,17 @@ public class VentanaPrincipal extends JFrame{
 	int mouseRow = -1;
 	int mouseCol = -1;
 	private DefaultListModel<Seccion> mSeccion = new DefaultListModel<>();
-	private DefaultListModel<Seccion> mCarrito= new DefaultListModel<>();
-	private JList<Seccion> lSecciones = new JList<>( mSeccion );
-	private JList<Seccion> lCarrito = new JList<>( mCarrito );
 	
 	private DefaultTableModel mProductos = new DefaultTableModel(
-				new Object[] { "Id", "Nombre", "Marca","PrecioProducto" }, 0
+				new Object[] { "Id", "Nombre", "Marca","PrecioProducto" ,"Seccion"}, 0
 			);
 	private JTable tProductos = new JTable( mProductos );
 	
+	private TextField textFiltroSeccion = new TextField();
 	
 	
 	//CONSTRUCTOR DE LA VENTANA
-	public VentanaPrincipal() {
+	public VentanaPrincipal( Usuario u , JFrame ventanaAnterior) {
 		setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 		setSize( 900, 600 );
 		setTitle( "Ventana de administración de Deusto BeReal" );
@@ -51,12 +58,20 @@ public class VentanaPrincipal extends JFrame{
 			pNorte.add( botonCarrito);
 			getContentPane().add( pNorte, BorderLayout.NORTH );
 		JSplitPane pOeste = new JSplitPane( JSplitPane.VERTICAL_SPLIT ); // Listas oeste
-			JPanel pSecciones = new JPanel( new BorderLayout() );
-			pSecciones.add( new JLabel( "Secciones:" ), BorderLayout.NORTH );
-			pSecciones.add( new JScrollPane(lSecciones), BorderLayout.CENTER );
-			pSecciones.add( new JLabel( "Productos en tu carrito:" ), BorderLayout.SOUTH);
-			pSecciones.add( new JScrollPane(lCarrito), BorderLayout.CENTER );
-			pOeste.setTopComponent( pSecciones );
+			JPanel pFiltro = new JPanel( new BorderLayout() );
+			pFiltro.add( new JLabel( "HOLA ,"+ u.getNombre() ), BorderLayout.NORTH );
+			
+			JPanel panelFiltros = new JPanel( new FlowLayout());
+			panelFiltros.add(new JLabel("Filtrar por seccion-->"));
+			panelFiltros.add(textFiltroSeccion);
+			
+			pFiltro.add(panelFiltros,BorderLayout.CENTER);
+			
+			
+			
+			
+			
+			pOeste.setTopComponent( pFiltro );
 			getContentPane().add(pOeste,BorderLayout.WEST);
 		JPanel pPrincipal = new JPanel( new BorderLayout() ); // Panel central (tabla)
 			pPrincipal.add( new JLabel( "Productos de la seccion:" ), BorderLayout.NORTH );
@@ -73,17 +88,137 @@ public class VentanaPrincipal extends JFrame{
 		
 		// INICIALIZAR CON DATOS
 		ArrayList<Producto> todosLosProductos = null;
+		
 		try {
 			todosLosProductos = GestorBD.todosLosProductos();
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		};
 		for (Producto p : todosLosProductos) {
-			this.mProductos.addRow( new Object[] {p.getIdProducto(), p.getNombreProducto(), p.getMarca(), p.getPrecioProducto()} );
-		}		
+			this.mProductos.addRow( new Object[] {p.getIdProducto(), p.getNombreProducto(), p.getMarca(), p.getPrecioProducto(), p.getSeccion()} );
+		}	
 		
-	}
+		
+		
+		
+		/*
+		 * 
+		 * 
+		 * 
+		 * CAMBIOS EN LA TABLA PRODUCTOS ( RENDERER , SELECTION MODE ETC)
+		 * 
+		 * 
+		 * 
+		 * */
+		DefaultTableCellRenderer numRenderer = new DefaultTableCellRenderer() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+				JLabel label = new JLabel(value.toString());					
+				label.setHorizontalAlignment(JLabel.CENTER);
+								
+				//Se diferencia el color de fondo en filas pares e impares
+				if (row % 2 == 0) {
+					label.setBackground(new Color(224, 224, 224));
+				} else {
+					label.setBackground(Color.WHITE);
+				}
+							
+				
+				
+				//Si la celda está seleccionada se asocia un color de fondo y letra
+				if (mouseRow == row && mouseCol == column) {
+					label.setBackground(Color.green);
+					label.setForeground(Color.WHITE);
+				}
+				
+				//Si la celda está seleccionada se asocia un color de fondo y letra
+				if (isSelected) {
+					label.setBackground(table.getSelectionBackground());
+					label.setForeground(table.getSelectionForeground());
+				}
+
+				//Es necesaria esta sentencia para pintar correctamente el color de fondo
+				label.setOpaque(true);
+												
+				return label;
+			}
+		};
+		DefaultTableCellRenderer textRenderer  = new DefaultTableCellRenderer() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+				JLabel label = new JLabel(value.toString());					
+				label.setHorizontalAlignment(JLabel.LEFT);
+								
+				//Se diferencia el color de fondo en filas pares e impares
+				if (row % 2 == 0) {
+					label.setBackground(new Color(224, 224, 224));
+				} else {
+					label.setBackground(Color.WHITE);
+				}
+				
+				//Si la celda está seleccionada se asocia un color de fondo y letra
+				if (mouseRow == row && mouseCol == column) {
+					label.setBackground(Color.green);
+					label.setForeground(Color.WHITE);
+				}
+				
+				//Si la celda está seleccionada se asocia un color de fondo y letra
+				if (isSelected) {
+					label.setBackground(table.getSelectionBackground());
+					label.setForeground(table.getSelectionForeground());
+				}
+
+				//Es necesaria esta sentencia para pintar correctamente el color de fondo
+				label.setOpaque(true);
+
+				return label;
+			}
+		};
+		
+		
+		this.tProductos.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				//Se obtiene la fila/columna sobre la que están el ratón mientras se mueve
+				int row = tProductos.rowAtPoint(e.getPoint());
+				int col = tProductos.columnAtPoint(e.getPoint());
+
+				//Cuando el ratón se mueve sobre tabla, actualiza la fila/columna sobre la que está el ratón
+				//de esta forma se puede modificar el color de renderizado de la celda.				
+				mouseRow = row;
+				mouseCol = col;
+				
+				//Se fuerza el redibujado de la tabla para modificar el color de la celda sobre la que está el ratón.
+				tProductos.repaint();
+			}
+			
+			@Override
+			public void mouseDragged(MouseEvent e) { 
+				int row = tProductos.rowAtPoint(e.getPoint());
+				int col = tProductos.columnAtPoint(e.getPoint());
+
+				System.out.println(String.format("Se está arrastrando con el botón %d pulsado sobre la fila %d, columna %d", e.getButton(), row, col));
+			}			
+		});
+	
+		this.tProductos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		//Se modifica el Renderer de las columnas		
+				this.tProductos.getColumnModel().getColumn(0).setCellRenderer(numRenderer);		//ID
+				this.tProductos.getColumnModel().getColumn(1).setCellRenderer(textRenderer);	//NOMBRE
+				this.tProductos.getColumnModel().getColumn(2).setCellRenderer(textRenderer);		//MARCA
+				this.tProductos.getColumnModel().getColumn(3).setCellRenderer(numRenderer);		//PRECIO
+				this.tProductos.getColumnModel().getColumn(4).setCellRenderer(textRenderer); // seccion
+		
+		
 	
 
+
+}
+	
 }

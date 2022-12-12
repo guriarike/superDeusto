@@ -1,26 +1,24 @@
 package es.deusto.prog3.g01;
 
+import es.deusto.prog3.gui.VentanaInicioSesion;
 import es.deusto.prog3.gui.VentanaPrincipal;
 
 public class Main {
 
 	public static void main(String[] args) {
 		try {
+			GestorBD.borrarProductos();
 			GestorBD.crearBBDD();
-			Seccion s = new Seccion();
-			s.setNombre("Lacteos");
 			
-			Marca m = new Marca();
-			m.setNombreMarca("Pascual");
-			
-			Producto p = new Producto();
-			p.setNombreProducto("Leche semidesnatada");
-			p.setPrecioProducto(2);
-			p.setMarca(m);
-			p.setSeccion(s);
-			GestorBD.insetarProductos(p);
-			
-			VentanaPrincipal ventana = new VentanaPrincipal();
+			GestorBD.InitUsuarios();
+		
+			for(Usuario u:GestorBD.todosLosUsuarios()) {
+				System.out.println(u.getCorreo());
+			}
+			Usuario u= new Usuario();
+			u.setNombre( "Guria");
+			VentanaInicioSesion venn = new VentanaInicioSesion();
+			VentanaPrincipal ventana = new VentanaPrincipal(u, venn);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
