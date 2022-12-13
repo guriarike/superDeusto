@@ -33,7 +33,7 @@ import javax.swing.table.TableModel;
 
 import es.deusto.prog3.g01.GestorBD;
 import es.deusto.prog3.g01.Producto;
-import es.deusto.prog3.g01.ProductosTableModel;
+
 import es.deusto.prog3.g01.Seccion;
 import es.deusto.prog3.g01.Usuario;
 
@@ -92,16 +92,32 @@ public class VentanaPrincipal extends JFrame {
 
 		// INICIALIZAR CON DATOS
 		ArrayList<Producto> todosLosProductos = null;
-
+		ArrayList<Producto> productosDiferentes = new ArrayList<>();
+		ArrayList<String> nombresDiferentes = new ArrayList<>();	
+		
 		try {
 			todosLosProductos = GestorBD.todosLosProductos();
+			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		};
+		
+		// AQUI HAGO QUE SALGAN PRODUCTOS CON NOMBRES DIFERENTES
+		for(Producto prod:todosLosProductos) {
+			if(!nombresDiferentes.contains(prod.getNombreProducto())) {
+				nombresDiferentes.add(prod.getNombreProducto());
+				productosDiferentes.add(prod);
+			}
+			
+			
 		}
-		;
-		for (Producto p : todosLosProductos) {
+		
+		
+		
+		
+		for (Producto p : productosDiferentes) {
 			this.mProductos.addRow(new Object[] { p.getIdProducto(), p.getNombreProducto(), p.getMarca(),
 					p.getPrecioProducto(), p.getSeccion() });
 		}
@@ -112,7 +128,6 @@ public class VentanaPrincipal extends JFrame {
 		textFiltroSeccion.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent e) {
 				// selectRows(textFiltroSeccion.getText());
-
 				tProductos.repaint();
 			}
 
@@ -332,13 +347,9 @@ public class VentanaPrincipal extends JFrame {
 
 	}
 
-	private void llenarModelo(ArrayList<Producto> lista) {
-		for (int i = 0; i < tProductos.getRowCount(); i++) {
-			mProductos.removeRow(i);
-			i -= 1;
-		}
-		tProductos.setModel(new ProductosTableModel(lista));
+	
+		
 
-	}
+	
 
 }

@@ -60,7 +60,6 @@ public class GestorBD {
 					+ " Correo TEXT NOT NULL,\n"
 					+ " Nombre TEXT NOT NULL,\n" 					
 					+ " Apellido TEXT NOT NULL,\n" 
-					+ " FechaNacimiento DATE NOT NULL,\n" 
 					+ " Contraseña TEXT NOT NULL,\n"
 					+ " PRIMARY KEY(id,Correo));";
 			
@@ -79,11 +78,11 @@ public class GestorBD {
 		// Se abre la conexión y se obtiene el Statement
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 
-			String sql = "DROP TABLE IF EXISTS USER";
+			String sql = "DELETE *";
 
 			// Se ejecuta la sentencia de creación de la tabla Estudiantes
 			if (!stmt.execute(sql)) {
-				System.out.println("- Se ha borrado la tabla Cliente");
+				System.out.println("- Se ha borrado la BBDD");
 			}
 		} catch (Exception ex) {
 			System.err.println(String.format("* Error al borrar la BBDD: %s", ex.getMessage()));
@@ -94,7 +93,11 @@ public class GestorBD {
 	
 	public static void borrarProductos() {
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
-			String sql = "DELETE  * FROM PRODUCTO";
+			String sql = "DELETE * FROM PRODUCTO";
+			
+			if (!stmt.execute(sql)) {
+				System.out.println("- Se ha borrado la BBDD");
+			}
 		}catch(Exception e) {
 			System.out.println(e);
 			
@@ -125,13 +128,15 @@ public class GestorBD {
 				String apellido = u.getApellido();
 				String contrasena = u.getContrasena();
 				String correo = u.getCorreo();
-				int telefono = u.getTelefono();
+				
 				
 				
 
-				String sql = "INSERT INTO USUARIO (id,Nombre,Apellido,Correo,Contraseña)" + "VALUES('"+ id + " " + nombre + "','"
-						+ apellido + "','" + correo + "','" + contrasena + "');";
+				String sql = "INSERT INTO USUARIO (id,Correo,Nombre,Apellido,Contraseña)" 
+				+ "VALUES('" + id + "',' " + correo + "','" + nombre + "','" + apellido + "','" + contrasena + "');";
 				stmt.executeUpdate(sql);
+				
+				System.out.println(nombre);
 
 			}
 		} catch (Exception e) {
@@ -157,21 +162,7 @@ public class GestorBD {
 			e.printStackTrace();
 		}
 	}
-	public static void insetarSeccion(Seccion... listaSecciones) {
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
-			for (Seccion s : listaSecciones) {
-				String nombre = s.getNombre();
-				
-				String sql = "INSERT INTO SECCION (NombreSeccion)" + "VALUES('" + nombre + "');";
 
-				stmt.executeUpdate(sql);
-
-			}
-		} catch (Exception e) {
-			System.out.println(String.format("Error insertando secciones: ", e.getMessage()));
-			e.printStackTrace();
-		}
-	}
 
 	/*
 	 * 
@@ -280,7 +271,6 @@ public class GestorBD {
 				usuario.setId(rs.getInt("id"));
 				usuario.setNombre(rs.getString("Nombre"));
 				usuario.setApellido(rs.getString("Apellido"));
-				// user.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
 				usuario.setCorreo(rs.getString("Correo"));
 				usuario.setContrasena("contrasena");
 				listaUsuarios.add(usuario);
@@ -317,26 +307,9 @@ public class GestorBD {
 		return listaProductos;
 
 	}
-	public static ArrayList<Seccion> todosLasSeccion() throws SQLException {
-		ArrayList<Seccion> listaSecciones = new ArrayList<>();
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
-
-			String sql = "SELECT * FROM SECCION";
-			ResultSet rs = stmt.executeQuery(sql);
-			while (rs.next()) {
-				Seccion s = new Seccion();
-				s.setNombre(rs.getString("NombreSeccion"));
-				
-				listaSecciones.add(s);
-			}
-
-		} catch (Exception e) {
-			System.out.println(String.format("Error todos los productos: ", e.getMessage()));
-			e.printStackTrace();
-		}
-		return listaSecciones;
-
-	}
+	
+	
+	
 	public static boolean existeUsuarioEnBBDD(String correo, String contrasena) {
 		try {
 			ArrayList<Usuario> usuarios = GestorBD.todosLosUsuarios();
@@ -367,7 +340,6 @@ public class GestorBD {
 				usuario = new Usuario();
 				usuario.setNombre(rs.getString("Nombre"));
 				usuario.setApellido(rs.getString("Apellido"));
-				// user.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
 				usuario.setCorreo(rs.getString("Correo"));
 				usuario.setContrasena("Contrasena");
 
@@ -514,9 +486,7 @@ public class GestorBD {
 			insetarProductos(p5);
 			
 			
-			insetarSeccion(s);
-			insetarSeccion(s1);
-			insetarSeccion(s2);
+			
 			
 
 		}
@@ -531,8 +501,7 @@ public class GestorBD {
 		u.setApellido("rike");
 		u.setCorreo("guriarike@opendeusto.es");
 		u.setContrasena("contraseña");
-		u.setTelefono(688895837);
-		u.setCodigoPostal(48600);
+		
 		
 		Usuario u2 = new Usuario();
 		u2.setId(1);
@@ -540,8 +509,7 @@ public class GestorBD {
 		u2.setApellido("gallastegi");
 		u2.setCorreo("jonan@opendeusto.es");
 		u.setContrasena("contraseña2");
-		u2.setTelefono(688895837);
-		u2.setCodigoPostal(48600);
+
 		
 		
 		Usuario u3 = new Usuario();
@@ -550,8 +518,7 @@ public class GestorBD {
 		u3.setApellido("jauregi");
 		u3.setCorreo("asier.jauregi@opendeusto.es");
 		u.setContrasena("contraseña3");
-		u3.setTelefono(666333000);
-		u3.setCodigoPostal(48300);
+		
 		
 		insertarUsuarios(u);
 		insertarUsuarios(u2);

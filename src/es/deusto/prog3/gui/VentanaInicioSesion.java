@@ -61,7 +61,7 @@ public class VentanaInicioSesion extends JFrame {
 	 * Create the application.
 	 */
 	public VentanaInicioSesion() {
-		GestorBD.crearBBDD();
+		
 		initialize();
 
 	}
