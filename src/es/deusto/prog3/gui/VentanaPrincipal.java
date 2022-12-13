@@ -33,6 +33,7 @@ import javax.swing.table.TableModel;
 
 import es.deusto.prog3.g01.GestorBD;
 import es.deusto.prog3.g01.Producto;
+import es.deusto.prog3.g01.ProductosTableModel;
 import es.deusto.prog3.g01.Seccion;
 import es.deusto.prog3.g01.Usuario;
 
@@ -139,6 +140,24 @@ public class VentanaPrincipal extends JFrame {
 				llenarModelo(productosFiltrados);
 
 			}
+			if (comboFiltro.getSelectedItem() == "Marca") {
+				for (Producto prod : todosLosProductos) {
+					if (prod.getMarca().contains(textFiltroSeccion.getText())) {
+						productosFiltrados.add(prod);
+					}
+				}
+				llenarModelo(productosFiltrados);
+
+			}
+			if (comboFiltro.getSelectedItem() == "Nombre") {
+				for (Producto prod : todosLosProductos) {
+					if (prod.getNombreProducto().contains(textFiltroSeccion.getText())) {
+						productosFiltrados.add(prod);
+					}
+				}
+				llenarModelo(productosFiltrados);
+
+			}
 		}else {
 			llenarModelo(todosLosProductos);
 		}
@@ -170,7 +189,7 @@ public class VentanaPrincipal extends JFrame {
 
 				// Si la celda está seleccionada se asocia un color de fondo y letra
 				if (mouseRow == row && mouseCol == column) {
-					label.setBackground(Color.green);
+					label.setBackground(Color.orange);
 					label.setForeground(Color.WHITE);
 				}
 
@@ -204,7 +223,7 @@ public class VentanaPrincipal extends JFrame {
 
 				// Si la celda está seleccionada se asocia un color de fondo y letra
 				if (mouseRow == row && mouseCol == column) {
-					label.setBackground(Color.green);
+					label.setBackground(Color.orange);
 					label.setForeground(Color.WHITE);
 				}
 
@@ -307,15 +326,7 @@ public class VentanaPrincipal extends JFrame {
 
 	private void llenarModelo(ArrayList<Producto> lista) {
 
-		// borro lo que esta en la tabla
-		for (int i = 0; i < tProductos.getRowCount(); i++) {
-			mProductos.removeRow(i);
-			i -= 1;
-		}
-		for (Producto prod : lista) {
-			this.mProductos.addRow(new Object[] { prod.getIdProducto(), prod.getNombreProducto(), prod.getMarca(),
-					prod.getPrecioProducto(), prod.getSeccion() });
-		}
+		tProductos.setModel(new ProductosTableModel(lista));
 
 	}
 
