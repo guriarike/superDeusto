@@ -11,11 +11,14 @@ public class Main {
 			GestorBD.crearBBDD();
 			
 			GestorBD.InitUsuarios();
+			
+			GestorBD.insertarUsuarios();
 		
 			for(Usuario u:GestorBD.todosLosUsuarios()) {
 				System.out.println(u.getCorreo());
 			}
 			Usuario u= new Usuario();
+			u.setNombre("Asier");
 			u.setNombre( "Guria");
 			VentanaInicioSesion venn = new VentanaInicioSesion();
 			VentanaPrincipal ventana = new VentanaPrincipal(u, venn);

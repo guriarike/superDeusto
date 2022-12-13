@@ -129,7 +129,7 @@ public class GestorBD {
 				
 				
 
-				String sql = "INSERT INTO USUARIO (id,Nombre,Apellido,Correo,Contraseña)" + "VALUES('"+id+"" + nombre + "','"
+				String sql = "INSERT INTO USUARIO (id,Nombre,Apellido,Correo,Contraseña)" + "VALUES('"+ id + " " + nombre + "','"
 						+ apellido + "','" + correo + "','" + contrasena + "');";
 				stmt.executeUpdate(sql);
 
@@ -543,8 +543,20 @@ public class GestorBD {
 		u2.setTelefono(688895837);
 		u2.setCodigoPostal(48600);
 		
+		
+		Usuario u3 = new Usuario();
+		u3.setId(1);
+		u3.setNombre("asier");
+		u3.setApellido("jauregi");
+		u3.setCorreo("asier.jauregi@opendeusto.es");
+		u.setContrasena("contraseña3");
+		u3.setTelefono(666333000);
+		u3.setCodigoPostal(48300);
+		
 		insertarUsuarios(u);
 		insertarUsuarios(u2);
+		insertarUsuarios(u3);
+		
 	}
 
 }

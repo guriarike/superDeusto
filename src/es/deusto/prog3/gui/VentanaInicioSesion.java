@@ -84,7 +84,7 @@ public class VentanaInicioSesion extends JFrame {
 		lblSuperDeusto.setBounds(29, 24, 119, 25);
 		frmVentanaInicioSesion.getContentPane().add(lblSuperDeusto);
 
-		JLabel lblUsuario = new JLabel("Usuario");
+		JLabel lblUsuario = new JLabel("Correo");
 		lblUsuario.setBounds(29, 103, 90, 13);
 		frmVentanaInicioSesion.getContentPane().add(lblUsuario);
 
@@ -139,7 +139,7 @@ public class VentanaInicioSesion extends JFrame {
 						VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(GestorBD.usuarioPorCorreo(textUsuario.getText()), ventanaActual);
 						ventanaPrincipal.setVisible(true);
 					}else {
-						System.out.println("Error en la contraseña o usuario");
+						System.out.println("Error en el correo o contraseña");
 					}
 					
 				}catch(Exception ee) {
