@@ -107,12 +107,12 @@ public class VentanaPrincipal extends JFrame {
 		}
 
 		// configuracion del filtrado
-		
+
 		// esto para tener listener de lo que se esta escribiendo
 		textFiltroSeccion.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent e) {
 				// selectRows(textFiltroSeccion.getText());
-				
+
 				tProductos.repaint();
 			}
 
@@ -126,41 +126,26 @@ public class VentanaPrincipal extends JFrame {
 				tProductos.repaint();
 			}
 		});
-		
-		
-		ArrayList<Producto> productosFiltrados = new ArrayList<>();
-		
-		if (textFiltroSeccion.getText() != null && !textFiltroSeccion.getText().isEmpty()) {
-			if (comboFiltro.getSelectedItem() == "Seccion") {
-				for (Producto prod : todosLosProductos) {
-					if (prod.getSeccion().contains(textFiltroSeccion.getText())) {
-						productosFiltrados.add(prod);
-					}
-				}
-				llenarModelo(productosFiltrados);
 
-			}
-			if (comboFiltro.getSelectedItem() == "Marca") {
-				for (Producto prod : todosLosProductos) {
-					if (prod.getMarca().contains(textFiltroSeccion.getText())) {
-						productosFiltrados.add(prod);
-					}
-				}
-				llenarModelo(productosFiltrados);
-
-			}
-			if (comboFiltro.getSelectedItem() == "Nombre") {
-				for (Producto prod : todosLosProductos) {
-					if (prod.getNombreProducto().contains(textFiltroSeccion.getText())) {
-						productosFiltrados.add(prod);
-					}
-				}
-				llenarModelo(productosFiltrados);
-
-			}
-		}else {
-			llenarModelo(todosLosProductos);
-		}
+		/*
+		 * if (textFiltroSeccion.getText() != null &&
+		 * !textFiltroSeccion.getText().isEmpty()) { if (comboFiltro.getSelectedItem()
+		 * == "Seccion") { for (Producto prod : todosLosProductos) { if
+		 * (prod.getSeccion().startsWith(textFiltroSeccion.getText())) { // starts with
+		 * productosFiltrados.add(prod); } } llenarModelo(productosFiltrados);
+		 * 
+		 * } if (comboFiltro.getSelectedItem() == "Marca") { for (Producto prod :
+		 * todosLosProductos) { if
+		 * (prod.getMarca().startsWith(textFiltroSeccion.getText())) {
+		 * productosFiltrados.add(prod); } } llenarModelo(productosFiltrados);
+		 * 
+		 * } if (comboFiltro.getSelectedItem() == "Nombre") { for (Producto prod :
+		 * todosLosProductos) { if
+		 * (prod.getNombreProducto().startsWith(textFiltroSeccion.getText())) {
+		 * productosFiltrados.add(prod); } } llenarModelo(productosFiltrados);
+		 * 
+		 * } }else { llenarModelo(todosLosProductos); }
+		 */
 
 		/*
 		 * 
@@ -199,6 +184,46 @@ public class VentanaPrincipal extends JFrame {
 					label.setForeground(table.getSelectionForeground());
 				}
 
+				// filtro
+				ArrayList<Producto> todosLosProductos = null;
+
+				try {
+					todosLosProductos = GestorBD.todosLosProductos();
+
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				;
+				if (textFiltroSeccion.getText() != null && !textFiltroSeccion.getText().isEmpty()) {
+					if (comboFiltro.getSelectedItem() == "Seccion") {
+						String sec = (String) tProductos.getValueAt(row, 4);
+
+						if (sec.startsWith(textFiltroSeccion.getText())) {
+							// starts with
+							label.setBackground(Color.red);
+						}
+
+					}
+					if (comboFiltro.getSelectedItem() == "Marca") {
+						String marc = (String)tProductos.getValueAt(row, 2);
+							if (marc.startsWith(textFiltroSeccion.getText())) {
+								label.setBackground(Color.red);
+							}
+						
+
+					}
+					if (comboFiltro.getSelectedItem() == "Nombre") {
+						String nom = (String)tProductos.getValueAt(row, 1);
+						
+							if (nom.startsWith(textFiltroSeccion.getText())) {
+								label.setBackground(Color.red);
+							}
+						
+
+					}
+				}
+
 				// Es necesaria esta sentencia para pintar correctamente el color de fondo
 				label.setOpaque(true);
 
@@ -232,7 +257,35 @@ public class VentanaPrincipal extends JFrame {
 					label.setBackground(table.getSelectionBackground());
 					label.setForeground(table.getSelectionForeground());
 				}
+				// filtro
+				if (textFiltroSeccion.getText() != null && !textFiltroSeccion.getText().isEmpty()) {
+					if (comboFiltro.getSelectedItem() == "Seccion") {
+						String sec = (String) tProductos.getValueAt(row, 4);
 
+						if (sec.startsWith(textFiltroSeccion.getText())) {
+							// starts with
+							label.setBackground(Color.red);
+						}
+
+					}
+					if (comboFiltro.getSelectedItem() == "Marca") {
+						String marc = (String)tProductos.getValueAt(row, 2);
+							if (marc.startsWith(textFiltroSeccion.getText())) {
+								label.setBackground(Color.red);
+							}
+						
+
+					}
+					if (comboFiltro.getSelectedItem() == "Nombre") {
+						String nom = (String)tProductos.getValueAt(row, 1);
+						
+							if (nom.startsWith(textFiltroSeccion.getText())) {
+								label.setBackground(Color.red);
+							}
+						
+
+					}
+				}
 				// Es necesaria esta sentencia para pintar correctamente el color de fondo
 				label.setOpaque(true);
 
@@ -279,53 +332,11 @@ public class VentanaPrincipal extends JFrame {
 
 	}
 
-	// metodo para filtrar
-	private void filtrarProductos() {
-		ArrayList<Producto> productos = null;
-		try {
-			productos = GestorBD.todosLosProductos();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ArrayList<Producto> exported = new ArrayList<>();
-		String searchStr = textFiltroSeccion.getText();
-		if (searchStr != null && !searchStr.isEmpty()) {
-			for (Producto p : productos) {
-				if (comboFiltro.getSelectedItem() == "Seccion") {
-					if (p.getSeccion().contains(searchStr)) {
-						exported.add(p);
-					}
-
-				}
-				if (comboFiltro.getSelectedItem() == "Marca") {
-					if (p.getMarca().contains(searchStr)) {
-						exported.add(p);
-					}
-				}
-				if (comboFiltro.getSelectedItem() == "Nombre") {
-					if (p.getNombreProducto().contains(searchStr)) {
-						exported.add(p);
-					}
-				}
-
-			}
-		}
-
-		if (!exported.isEmpty()) {
-			for (Producto p : exported) {
-				this.mProductos.addRow(new Object[] { p.getIdProducto(), p.getNombreProducto(), p.getMarca(),
-						p.getPrecioProducto(), p.getSeccion() });
-			}
-
-		} else {
-			JOptionPane.showMessageDialog(this, "Cannot export. No launches were selected", "Info",
-					JOptionPane.INFORMATION_MESSAGE);
-		}
-	}
-
 	private void llenarModelo(ArrayList<Producto> lista) {
-
+		for (int i = 0; i < tProductos.getRowCount(); i++) {
+			mProductos.removeRow(i);
+			i -= 1;
+		}
 		tProductos.setModel(new ProductosTableModel(lista));
 
 	}
