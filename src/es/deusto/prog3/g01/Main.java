@@ -6,6 +6,7 @@ import es.deusto.prog3.gui.VentanaPrincipal;
 public class Main {
 
 	public static void main(String[] args) {
+		
 		try {
 			Usuario pepe = new Usuario();
 			pepe.setId(1);

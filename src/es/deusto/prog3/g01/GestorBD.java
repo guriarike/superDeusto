@@ -466,6 +466,13 @@ public class GestorBD {
 		p5.setSeccion("Panaderia y Bolleria");
 
 		
+		Producto p6 = new Producto();
+		p6.setNombreProducto("Coca Cola");
+		p6.setPrecioProducto(1);
+		p6.setMarca("CocaCola");
+		p6.setSeccion("Refrescos");
+
+		
 		
 		Seccion s = new Seccion();
 		s.setNombre("Lacteos");
@@ -476,6 +483,9 @@ public class GestorBD {
 		Seccion s2 = new Seccion();
 		s.setNombre("Panaderia y Bolleria");
 		
+		Seccion s3 = new Seccion();
+		s.setNombre("Refrescos");
+		
 		
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 			insetarProductos(p);
@@ -484,6 +494,8 @@ public class GestorBD {
 			insetarProductos(p3);
 			insetarProductos(p4);
 			insetarProductos(p5);
+			insetarProductos(p6);
+			
 			
 			
 			
