@@ -47,7 +47,7 @@ public class VentanaInicioSesion extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
+				try { 
 					VentanaInicioSesion window = new VentanaInicioSesion();
 					window.frmVentanaInicioSesion.setVisible(true);
 				} catch (Exception e) {

@@ -8,24 +8,25 @@ public class Main {
 	public static void main(String[] args) {
 		
 		try {
-			GestorBD.crearBBDD();
-			
 			
 			Usuario uu = new Usuario();
-			uu.setNombre("guri");
-			
-			VentanaPrincipal vn = new VentanaPrincipal(uu, null);
-			vn.setVisible(true);
-			
-			
+			uu.setNombre("GURILA");
+			uu.setApellido("Rike");
+			uu.setContrasena("guriguri");
+			uu.setCorreo("guria");
 			
 			
+			VentanaPrincipal ventana = new VentanaPrincipal(uu, null);
 			
+			
+			/*int contador = 0;
 			for (Usuario u:GestorBD.todosLosUsuarios()) {
-				System.out.println(u.getNombre());
 				
-			}
-			VentanaInicioSesion venn = new VentanaInicioSesion();
+				System.out.println("#"+contador+"--"+u.getNombre());
+				contador++;
+			}*/
+			
+			
 			//VentanaPrincipal ventana = new VentanaPrincipal(pepe, venn);
 		} catch (Exception e) {
 			e.printStackTrace();

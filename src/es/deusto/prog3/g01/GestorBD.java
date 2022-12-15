@@ -16,7 +16,7 @@ import java.util.StringTokenizer;
 
 public class GestorBD {
 	protected static final String DRIVER_NAME = "org.sqlite.JDBC";
-	protected static final String DATABASE_FILE = "db/baseDatos.db";
+	protected static final String DATABASE_FILE = "db/baseDatos1.db";
 	protected static final String CONNECTION_STRING = "jdbc:sqlite:" + DATABASE_FILE;
 
 	public GestorBD() {
@@ -77,7 +77,7 @@ public class GestorBD {
 		// Se abre la conexión y se obtiene el Statement
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 
-			String sql = "DELETE *";
+			String sql = "DROP DATABASE '"+CONNECTION_STRING+"'";
 
 			// Se ejecuta la sentencia de creación de la tabla Estudiantes
 			if (!stmt.execute(sql)) {
@@ -309,6 +309,31 @@ public class GestorBD {
 
 	}
 	
+	public static Producto ProductoPorId(int id) throws SQLException {
+		ArrayList<Producto> listaProductos = new ArrayList<>();
+		Producto p = new Producto();
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+
+			String sql = "SELECT * FROM PRODUCTO WHERE Id = '"+id+"'";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				
+				p.setIdProducto(rs.getInt("id"));
+				p.setNombreProducto(rs.getString("Nombre"));
+				p.setPrecioProducto((Integer) rs.getInt("Precio"));
+				p.setMarca( rs.getString("Marca"));
+				p.setSeccion( rs.getString("Seccion"));
+				
+			}
+
+		} catch (Exception e) {
+			System.out.println(String.format("Error todos los productos: ", e.getMessage()));
+			e.printStackTrace();
+		}
+		return p;
+
+	}
+	
 	
 	
 	public static boolean existeUsuarioEnBBDD(String correo, String contrasena) {
@@ -398,7 +423,13 @@ public class GestorBD {
 				u.setCorreo(correo);
 				insertarUsuarios(u);
 			}
-
+			
+			
+			Usuario uu = new Usuario();
+			uu.setNombre("GURILA");
+			uu.setApellido("Rike");
+			uu.setContrasena("guriguri");
+			uu.setCorreo("guria");
 		}
 
 	}
