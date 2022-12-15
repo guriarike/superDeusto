@@ -16,7 +16,7 @@ import java.util.StringTokenizer;
 
 public class GestorBD {
 	protected static final String DRIVER_NAME = "org.sqlite.JDBC";
-	protected static final String DATABASE_FILE = "db/database.db";
+	protected static final String DATABASE_FILE = "db/baseDatos.db";
 	protected static final String CONNECTION_STRING = "jdbc:sqlite:" + DATABASE_FILE;
 
 	public GestorBD() {
@@ -36,7 +36,7 @@ public class GestorBD {
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); 
 			 Statement stmt = con.createStatement()) {
 			String producto = "CREATE TABLE IF NOT EXISTS PRODUCTO(\n" 
-					+ " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+					+ " id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n"
 					+ " Nombre TEXT NOT NULL,\n" 
 					+ " Precio INTEGER NOT NULL,\n"
 					+ " Marca TEXT NOT NULL,\n"
@@ -56,12 +56,11 @@ public class GestorBD {
 					+ "Precio DOUBLE NOT NULL);";
 
 			String usuario = "CREATE TABLE IF NOT EXISTS USUARIO (\n" 
-					+ " id INTEGER,\n"
+					+ " id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n"
 					+ " Correo TEXT NOT NULL,\n"
 					+ " Nombre TEXT NOT NULL,\n" 					
 					+ " Apellido TEXT NOT NULL,\n" 
-					+ " Contraseña TEXT NOT NULL,\n"
-					+ " PRIMARY KEY(id,Correo));";
+					+ " Contraseña TEXT NOT NULL);";
 			
 
 			if (!stmt.execute(usuario) && !stmt.execute(seccion)  && !stmt.execute(compra) && !stmt.execute(producto)) {
@@ -132,8 +131,8 @@ public class GestorBD {
 				
 				
 
-				String sql = "INSERT INTO USUARIO (id,Correo,Nombre,Apellido,Contraseña)" 
-				+ "VALUES('" + id + "',' " + correo + "','" + nombre + "','" + apellido + "','" + contrasena + "');";
+				String sql = "INSERT INTO USUARIO (Correo,Nombre,Apellido,Contraseña)" 
+				+ "VALUES(' " + correo + "','" + nombre + "','" + apellido + "','" + contrasena + "');";
 				stmt.executeUpdate(sql);
 				
 				System.out.println(nombre);
@@ -141,6 +140,7 @@ public class GestorBD {
 			}
 		} catch (Exception e) {
 			System.out.println(String.format("Error insertando usuarios: ", e.getMessage()));
+			e.printStackTrace();
 		}
 	}
 
@@ -293,6 +293,7 @@ public class GestorBD {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Producto p = new Producto();
+				p.setIdProducto(rs.getInt("id"));
 				p.setNombreProducto(rs.getString("Nombre"));
 				p.setPrecioProducto((Integer) rs.getInt("Precio"));
 				p.setMarca( rs.getString("Marca"));
@@ -383,9 +384,10 @@ public class GestorBD {
 				int numeroRandomParaUserName = random.nextInt(100);
 				String randomNombre = posiblesNombres[random.nextInt(upperboundNombres - 1)];
 				String randomApellido = posiblesApellidos[random.nextInt(upperboundApellidos - 1)];
-				String userName = randomNombre + randomApellido + numeroRandomParaUserName;
-				String contraseña = userName;
-				System.out.println(userName);
+				String contraseña = randomNombre + randomApellido + numeroRandomParaUserName;
+				String correo = contraseña + "@gmail.com";
+				
+				
 				// System.out.println("NOMBRE :"+ randomNombre);
 				// System.out.println("APELLIDO :"+ randomApellido);
 				System.out.println("#######################################");
@@ -393,6 +395,7 @@ public class GestorBD {
 				u.setNombre(randomNombre);
 				u.setApellido(randomApellido);
 				u.setContrasena(contraseña);
+				u.setCorreo(correo);
 				insertarUsuarios(u);
 			}
 
@@ -474,17 +477,7 @@ public class GestorBD {
 
 		
 		
-		Seccion s = new Seccion();
-		s.setNombre("Lacteos");
-		
-		Seccion s1 = new Seccion();
-		s.setNombre("Carne");
-		
-		Seccion s2 = new Seccion();
-		s.setNombre("Panaderia y Bolleria");
-		
-		Seccion s3 = new Seccion();
-		s.setNombre("Refrescos");
+
 		
 		
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
@@ -504,38 +497,5 @@ public class GestorBD {
 		}
 	}
 	
-	public static void InitUsuarios() {
-		
-		
-		Usuario u = new Usuario();
-		u.setId(1);
-		u.setNombre("guria");
-		u.setApellido("rike");
-		u.setCorreo("guriarike@opendeusto.es");
-		u.setContrasena("contraseña");
-		
-		
-		Usuario u2 = new Usuario();
-		u2.setId(1);
-		u2.setNombre("jonander");
-		u2.setApellido("gallastegi");
-		u2.setCorreo("jonan@opendeusto.es");
-		u.setContrasena("contraseña2");
-
-		
-		
-		Usuario u3 = new Usuario();
-		u3.setId(1);
-		u3.setNombre("asier");
-		u3.setApellido("jauregi");
-		u3.setCorreo("asier.jauregi@opendeusto.es");
-		u.setContrasena("contraseña3");
-		
-		
-		insertarUsuarios(u);
-		insertarUsuarios(u2);
-		insertarUsuarios(u3);
-		
-	}
-
+	
 }

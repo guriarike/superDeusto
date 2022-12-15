@@ -6,12 +6,16 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -52,14 +56,15 @@ public class VentanaPrincipal extends JFrame {
 
 	// CONSTRUCTOR DE LA VENTANA
 	public VentanaPrincipal(Usuario u, JFrame ventanaAnterior) {
+		JFrame ventanaActual = this;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(900, 600);
 		setTitle("Ventana de administración de Deusto BeReal");
 		JPanel pNorte = new JPanel(); // Panel norte
-		JButton botonVolver = new JButton("VOLVER");
+		JButton botonCerrarSesion = new JButton("CERRAR SESION");
 		JButton botonCuenta = new JButton("CUENTA");
 		JButton botonCarrito = new JButton("CARRITO");
-		pNorte.add(botonVolver);
+		pNorte.add(botonCerrarSesion);
 		pNorte.add(botonCuenta);
 		pNorte.add(botonCarrito);
 		getContentPane().add(pNorte, BorderLayout.NORTH);
@@ -344,7 +349,52 @@ public class VentanaPrincipal extends JFrame {
 		this.tProductos.getColumnModel().getColumn(2).setCellRenderer(textRenderer); // MARCA
 		this.tProductos.getColumnModel().getColumn(3).setCellRenderer(numRenderer); // PRECIO
 		this.tProductos.getColumnModel().getColumn(4).setCellRenderer(textRenderer);// Seccion
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/*
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * LISTENERS DE LOS BOTONES
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * */
+		
+		
+		botonCerrarSesion.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ventanaActual.dispose();
+				ventanaAnterior.setVisible(true);
+				
+				
+			}
+			
+		});
+		
 	}
 
 	

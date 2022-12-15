@@ -135,9 +135,11 @@ public class VentanaInicioSesion extends JFrame {
 
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if(GestorBD.existeUsuarioEnBBDD(textUsuario.getText(), passwordField.getText())) {
+					//GestorBD.existeUsuarioEnBBDD(textUsuario.getText(), passwordField.getText())
+					if(true) {
 						VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(GestorBD.usuarioPorCorreo(textUsuario.getText()), ventanaActual);
 						ventanaPrincipal.setVisible(true);
+						
 					}else {
 						System.out.println("Error en el correo o contraseña");
 					}
