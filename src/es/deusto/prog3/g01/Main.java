@@ -8,6 +8,8 @@ public class Main {
 	public static void main(String[] args) {
 		
 		try {
+			GestorBD.crearBBDD();
+			
 			
 			Usuario uu = new Usuario();
 			uu.setNombre("GURILA");

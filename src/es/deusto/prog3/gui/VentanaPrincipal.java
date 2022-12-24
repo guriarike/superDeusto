@@ -38,6 +38,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import org.hamcrest.core.IsInstanceOf;
+
 import es.deusto.prog3.g01.GestorBD;
 import es.deusto.prog3.g01.Producto;
 
@@ -52,7 +54,7 @@ public class VentanaPrincipal extends JFrame {
 	
 
 	private DefaultTableModel mProductos = new DefaultTableModel(
-			new Object[] { "Id", "Nombre", "Marca", "PrecioProducto", "Seccion", "" }, 0);
+			new Object[] { "Id", "Nombre", "Marca", "PrecioProducto", "Seccion",  }, 0);
 	private JTable tProductos = new JTable(mProductos);
 
 	private JTextField textFiltroSeccion = new JTextField();
@@ -199,13 +201,13 @@ public class VentanaPrincipal extends JFrame {
 
 				// Si la celda está seleccionada se asocia un color de fondo y letra
 				if (mouseRow == row && mouseCol == column) {
-					label.setBackground(Color.orange);
+					label.setBackground(Color.pink);
 					label.setForeground(Color.WHITE);
 				}
 
 				// Si la celda está seleccionada se asocia un color de fondo y letra
 				if (isSelected) {
-					label.setBackground(table.getSelectionBackground());
+					label.setBackground(Color.blue);
 					label.setForeground(table.getSelectionForeground());
 				}
 
@@ -226,14 +228,14 @@ public class VentanaPrincipal extends JFrame {
 
 						if (sec.startsWith(textFiltroSeccion.getText())) {
 							// starts with
-							label.setBackground(Color.red);
+							label.setBackground(Color.pink);
 						}
 
 					}
 					if (comboFiltro.getSelectedItem() == "Marca") {
 						String marc = (String)tProductos.getValueAt(row, 2);
 							if (marc.startsWith(textFiltroSeccion.getText())) {
-								label.setBackground(Color.red);
+								label.setBackground(Color.pink);
 							}
 						
 
@@ -242,7 +244,7 @@ public class VentanaPrincipal extends JFrame {
 						String nom = (String)tProductos.getValueAt(row, 1);
 						
 							if (nom.startsWith(textFiltroSeccion.getText())) {
-								label.setBackground(Color.red);
+								label.setBackground(Color.pink);
 							}
 						
 
@@ -273,13 +275,13 @@ public class VentanaPrincipal extends JFrame {
 
 				// Si la celda está seleccionada se asocia un color de fondo y letra
 				if (mouseRow == row && mouseCol == column) {
-					label.setBackground(Color.orange);
+					label.setBackground(Color.pink);
 					label.setForeground(Color.WHITE);
 				}
 
 				// Si la celda está seleccionada se asocia un color de fondo y letra
 				if (isSelected) {
-					label.setBackground(table.getSelectionBackground());
+					label.setBackground(Color.blue);
 					label.setForeground(table.getSelectionForeground());
 				}
 				// filtro
@@ -289,14 +291,14 @@ public class VentanaPrincipal extends JFrame {
 
 						if (sec.startsWith(textFiltroSeccion.getText())) {
 							// starts with
-							label.setBackground(Color.red);
+							label.setBackground(Color.pink);
 						}
 
 					}
 					if (comboFiltro.getSelectedItem() == "Marca") {
 						String marc = (String)tProductos.getValueAt(row, 2);
 							if (marc.startsWith(textFiltroSeccion.getText())) {
-								label.setBackground(Color.red);
+								label.setBackground(Color.pink);
 							}
 						
 
@@ -305,7 +307,7 @@ public class VentanaPrincipal extends JFrame {
 						String nom = (String)tProductos.getValueAt(row, 1);
 						
 							if (nom.startsWith(textFiltroSeccion.getText())) {
-								label.setBackground(Color.red);
+								label.setBackground(Color.pink);
 							}
 						
 
@@ -339,14 +341,15 @@ public class VentanaPrincipal extends JFrame {
 				}
 
 				// Si la celda está seleccionada se asocia un color de fondo y letra
+				
 				if (mouseRow == row && mouseCol == column) {
-					label.setBackground(Color.orange);
+					label.setBackground(Color.pink);
 					label.setForeground(Color.WHITE);
 				}
 
 				// Si la celda está seleccionada se asocia un color de fondo y letra
 				if (isSelected) {
-					label.setBackground(table.getSelectionBackground());
+					label.setBackground(Color.blue);
 					label.setForeground(table.getSelectionForeground());
 				}
 				// filtro
@@ -356,14 +359,14 @@ public class VentanaPrincipal extends JFrame {
 
 						if (sec.startsWith(textFiltroSeccion.getText())) {
 							// starts with
-							label.setBackground(Color.red);
+							label.setBackground(Color.pink);
 						}
 
 					}
 					if (comboFiltro.getSelectedItem() == "Marca") {
 						String marc = (String)tProductos.getValueAt(row, 2);
 							if (marc.startsWith(textFiltroSeccion.getText())) {
-								label.setBackground(Color.red);
+								label.setBackground(Color.pink);
 							}
 						
 
@@ -372,7 +375,7 @@ public class VentanaPrincipal extends JFrame {
 						String nom = (String)tProductos.getValueAt(row, 1);
 						
 							if (nom.startsWith(textFiltroSeccion.getText())) {
-								label.setBackground(Color.red);
+								label.setBackground(Color.pink);
 							}
 						
 
@@ -435,6 +438,7 @@ public class VentanaPrincipal extends JFrame {
 				System.out.println(
 						String.format("Se está arrastrando con el botón %d pulsado sobre la fila %d, columna %d",
 								e.getButton(), row, col));
+				tProductos.repaint();
 			}
 		});
 		
@@ -476,6 +480,7 @@ public class VentanaPrincipal extends JFrame {
 				int row = tProductos.rowAtPoint(e.getPoint());
 				// id del producto
 				int id = (int) tProductos.getValueAt(row, 0);
+				
 				int number =Integer.parseInt(JOptionPane.showInputDialog(null, "Añade la cantidad que deseas añadir al carrito:( numerico)"));
 				
 				try {
@@ -504,7 +509,7 @@ public class VentanaPrincipal extends JFrame {
 		this.tProductos.getColumnModel().getColumn(2).setCellRenderer(textRenderer); // MARCA
 		this.tProductos.getColumnModel().getColumn(3).setCellRenderer(numRenderer); // PRECIO
 		this.tProductos.getColumnModel().getColumn(4).setCellRenderer(textRenderer);// Seccion
-		this.tProductos.getColumnModel().getColumn(5).setCellRenderer(botonRenderer);// Seccion
+		//this.tProductos.getColumnModel().getColumn(5).setCellRenderer(botonRenderer);// Boton
 		
 		
 		// no se puede interactuar

@@ -6,13 +6,26 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -24,6 +37,7 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import es.deusto.prog3.g01.Compra;
 import es.deusto.prog3.g01.GestorBD;
 import es.deusto.prog3.g01.Producto;
 import es.deusto.prog3.g01.Usuario;
@@ -56,30 +70,27 @@ public class VentanaCarrito extends JFrame {
 		 * for(int i= 0; i<tProductos.getRowCount();i++) { precioTotal = precioTotal +
 		 * (Integer)tProductos.getValueAt(i, 3)* (Integer)tProductos.getValueAt(i, 2); }
 		 */
-		JLabel labelPrecioTotal = new JLabel("El precio total de su compra es:" + precioTotal);
+		JLabel labelPrecioTotal = new JLabel("El precio total de su compra es:" + calcularPrecioTotal());
 		labelPrecioTotal.setBackground(Color.red);
 		pOeste.add(labelPrecioTotal, BorderLayout.SOUTH);
 
 		getContentPane().add(pOeste, BorderLayout.WEST);
 
 		// AQUI AÑADIMOS OTRAS COSAS DE LA VENTANA
-		JPanel pEste = new JPanel(new BorderLayout());
-		JTextArea textAviso = new JTextArea("POR FAVOR REVISE SI LOS PRODUCTOS DE SU CARRITO SON LOS" + "CORRECTOS.\n");
-		JTextArea textAviso1 = new JTextArea("\"PARA BORRAR UN PRODUCTO DEL CARRITO HAGA CLICK EN EL.");
-		JTextArea textAviso2 = new JTextArea("PARA CAMBIAR LA CANTIDAD PULSE 'CONTROL' Y HAGA CLICK ENCIMA.");
-		JTextArea textAviso3 = new JTextArea(
-				"SI PULSA EL BOTON 'FINALIZAR COMPRA' CREAREMOS UN FICHERO CON UN TICKET EN EL ARCHIVO QUE ESCOJA EN SU ORDENADOR.");
-		JTextArea textAviso4 = new JTextArea("¡GRACIAS!");
+		JScrollPane scrollPane = new JScrollPane();
+		JTextArea textArea = new JTextArea(
+				"Si pulsa el botón 'Finalizar compra' crearemos un fichero con un ticket en el archivo que escoja en su ordenador.\n"
+						+ " - Si hace click encima de un producto podra eliminarlo de la compra. \n"
+						//S+ " - Si hace click mientras mantiene la tecla 'CNTRL' sera capaz de cambiar la cantidad."
+						);
+		scrollPane.setViewportView(textArea);
 
 		JButton botonFinalizar = new JButton("FINALIZAR COMPRA");
 
-		pEste.add(textAviso, BorderLayout.SOUTH);
-		pEste.add(textAviso1, BorderLayout.SOUTH);
-		pEste.add(textAviso2, BorderLayout.SOUTH);
-		pEste.add(textAviso3, BorderLayout.SOUTH);
-		pEste.add(textAviso4, BorderLayout.SOUTH);
-		pEste.add(botonFinalizar, BorderLayout.SOUTH);
-		getContentPane().add(pEste, BorderLayout.EAST);
+		getContentPane().add(scrollPane, BorderLayout.CENTER);
+		JPanel pBotonera = new JPanel();
+		pBotonera.add(botonFinalizar);
+		getContentPane().add(pBotonera, BorderLayout.SOUTH);
 
 		/*
 		 * 
@@ -154,7 +165,7 @@ public class VentanaCarrito extends JFrame {
 
 				// Si la celda está seleccionada se asocia un color de fondo y letra
 				if (isSelected) {
-					label.setBackground(table.getSelectionBackground());
+					label.setBackground(Color.blue);
 					label.setForeground(table.getSelectionForeground());
 				}
 
@@ -173,49 +184,167 @@ public class VentanaCarrito extends JFrame {
 		this.tProductos.getColumnModel().getColumn(1).setCellRenderer(textRenderer); // NOMBRE
 		this.tProductos.getColumnModel().getColumn(2).setCellRenderer(numRenderer); // PRECIO
 		this.tProductos.getColumnModel().getColumn(3).setCellRenderer(numRenderer); // CANTIDAD
-		
-		
-		
-		
-		
-		//ACTION LISTENER 
+
+		// Mouse Listeners
+		tProductos.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				int row = tProductos.rowAtPoint(e.getPoint());
+				int col = tProductos.columnAtPoint(e.getPoint());
+
+				System.out.println(String.format("Se ha salido de la fila %d, columna %d", e.getButton(), row, col));
+
+				// Cuando el ratón sale de la tabla, se resetea la columna/fila sobre la que
+				// está el ratón
+				mouseRow = -1;
+				mouseCol = -1;
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				int row = tProductos.rowAtPoint(e.getPoint());
+				// id del producto
+				int id = (int) tProductos.getValueAt(row, 0);
+				String decision = JOptionPane.showInputDialog(null, "Desea borrar este producto de su compra?(S/N)");
+				if (decision == "S" || decision == "s") {
+					tProductos.removeRowSelectionInterval(id - 1, id + 1);
+					tProductos.repaint();
+				} else {
+
+				}
+				/*
+				 * try { if(!mapaCarrito.keySet().contains((Integer)id)) { mapaCarrito.put(id,
+				 * number); System.out.println(GestorBD.ProductoPorId(id).getNombreProducto()
+				 * +"- cantidad ="+number); }else { mapaCarrito.put(id, number); }
+				 * }catch(SQLException ee) {
+				 * 
+				 * }
+				 */
+
+			}
+		});
+
+	
+		// ACTION LISTENER
 		botonFinalizar.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				crearTicket();
-				
-				
+
 			}
 		});
 
 	}
 
 	public void crearTicket() {
-		
-		// Aqui falta poner un JFileChooser y crear un fichero te texto con 'devolver'
+
+		// Creamos un filechooser y guardamos la ruta y el nombre de la carpeta
+		JFileChooser guardar = new JFileChooser();
+		guardar.showSaveDialog(null);
+		guardar.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		File archivo = guardar.getSelectedFile();
+
+		// contenido del ticket
 		String devolver = "Ticket SuperDeusto!\n";
 		double precioTotal = 0;
 		int i = 0;
-		
+
 		try {
 			for (i = 0; i < tProductos.getRowCount(); i++) {
 				Producto p = GestorBD.ProductoPorId((Integer) tProductos.getValueAt(i, 0));
-				precioTotal =  precioTotal + p.getPrecioProducto();
-				devolver = devolver + "Nombre :"+p.getNombreProducto()+"                   ---- Precio :"+p.getPrecioProducto()+"                            ---- Cantidad :"+tProductos.getValueAt(i, 3)+"\n";
-				
-				
-				
-				
+				precioTotal = precioTotal + p.getPrecioProducto();
+				devolver = devolver + "Nombre :" + p.getNombreProducto() + "                   ---- Precio :"
+						+ p.getPrecioProducto() + "                            ---- Cantidad :"
+						+ tProductos.getValueAt(i, 3) + "\n";
 
 			}
 		} catch (Exception e) {
 
 		}
-		
-		devolver = devolver +"\n"+"El precio total de la compra es-> \t"+precioTotal+" Euros";
+
+		devolver = devolver + "\n" + "El precio total de la compra es-> \t" + precioTotal + " Euros";
 		System.out.println(devolver);
+
+		// le pasamos al metodo para crear el fichero el nombre , la ruta y 'devolver'
+		guardarFichero(devolver, archivo);
 
 	}
 
+	public void guardarFichero(String texto, File archivo) {
+
+		FileWriter escribir;
+		try {
+
+			escribir = new FileWriter(archivo, true);
+			escribir.write(texto);
+			escribir.close();
+
+		} catch (FileNotFoundException ex) {
+			JOptionPane.showMessageDialog(null, "Error al guardar, ponga nombre al archivo");
+		} catch (IOException ex) {
+			JOptionPane.showMessageDialog(null, "Error al guardar, en la salida");
+		}
+
+	}
+
+	public double calcularPrecioTotal() {
+		double precioTotal = 0;
+		int i = 0;
+		try {
+			for (i = 0; i < tProductos.getRowCount(); i++) {
+				Producto p = GestorBD.ProductoPorId((Integer) tProductos.getValueAt(i, 0));
+				precioTotal = precioTotal + p.getPrecioProducto();
+
+			}
+
+		} catch (Exception e) {
+
+		}
+
+		return precioTotal;
+	}
+	public void crearCompra() {
+		Compra compra = new Compra();
+		ArrayList<Producto> productosCompra = new ArrayList<>();
+		int i = 0;
+		try {
+			for (i = 0; i < tProductos.getRowCount(); i++) {
+				Producto p = GestorBD.ProductoPorId((Integer) tProductos.getValueAt(i, 0));
+				productosCompra.add(p);
+
+			}
+
+		} catch (Exception e) {
+
+		}
+		
+		Date myDate = new Date(System.currentTimeMillis());
+		compra.setFechaCompra(myDate);
+		compra.setListaProductosDeCompra(productosCompra);
+		compra.setPrecioCompra(calcularPrecioTotal());
+		
+		
+	}
 }

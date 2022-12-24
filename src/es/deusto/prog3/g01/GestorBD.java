@@ -526,6 +526,61 @@ public class GestorBD {
 			
 
 		}
+		
+		
+		
+	}
+	
+	public static void initProductos2() {
+		String[] productosHabituales = {"Arroz", "Leche", "Huevos", "Tomates", "Cereales", "Atún",
+				"Aceite", "Galletas", "Manzanas", "Salchichas", "Lentejas", "Queso", "Café", 
+				"Zanahorias", "Yogur", "Papel higiénico", "Mantequilla", "Lechuga", "Ketchup",
+				"Jugo de naranja", "Jamón", "Helado", "Fideos", "Espaguetis", "Ensalada", "Detergente",
+				"Cerveza", "Cebolla", "Caldo de pollo", "Bolsas de basura", "Bolsas de congelación",
+				"Bolsas de té", "Bolsas de leche", "Bolsas de pan", "Bolsas de frutas", 
+				"Bolsas de verduras", "Bolsas de carne", "Bolsas de pescado", "Bolsas de pollo",
+				"Bolsas de marisco", "Bolsas de congelado", "Bolsas de alimentos", 
+				"Bolsas de conservas", "Bolsas de frutos secos", "Bolsas de panadería", 
+				"Bolsas de verduras frescas", "Bolsas de frutas frescas", "Bolsas de carne fresca", 
+				"Bolsas de pescado fresco", "Bolsas de pollo fresco", "Bolsas de marisco fresco", 
+				"Bolsas de verduras congeladas", "Bolsas de frutas congeladas", 
+				"Bolsas de carne congelada", "Bolsas de pescado congelado", 
+				"Bolsas de pollo congelado", "Bolsas de marisco congelado", 
+				"Bolsas de verduras deshidratadas", "Bolsas de frutas deshidratadas", 
+				"Bolsas de carne deshidratada", "Bolsas de pescado deshidratado", 
+				"Bolsas de pollo deshidratado", "Bolsas de marisco deshidratado", 
+				"Bolsas de verduras en conserva", "Bolsas de frutas en conserva", 
+				"Bolsas de carne en conserva", "Bolsas de pescado en conserva", 
+				"Bolsas de pollo en conserva", "Bolsas de marisco en conserva", 
+				"Bolsas de verduras en conserva", "Bolsas de frutas en conserva", 
+				"Bolsas de carne en conserva", "Bolsas de pescado en conserva", 
+				"Bolsas de pollo en conserva", "Bolsas de marisco en conserva"};
+		
+		String[] secciones = {"Carne", "Refresco", "Pescado", "Pasta", "Marisco", "Otros","Lacteos", "Panadería y Bollería"};
+		Random rand = new Random();
+		String[] marcas = { "Nestle", "Danone", "Lactalis", "Mondelez", "Unilever", "Mars", 
+				"Kellogg's", "General Mills", "PepsiCo", "Tyson Foods", "ConAgra",
+				"Kraft Heinz", "Campbell Soup", "Nestle Purina PetCare", "Hill's Pet Nutrition",
+				"Mars Petcare", "The Hershey Company", "The J.M. Smucker Company", 
+				"The Kraft Heinz Company", "The Coca-Cola Company", "PepsiCo",
+				"Anheuser-Busch InBev", "MillerCoors", "Heineken", "Diageo" };
+
+	    // Crea 100 productos distintos con nombres de productos habituales
+	    Producto[] productos = new Producto[100];
+	    for (int i = 0; i < 100; i++) {
+	      int precio = rand.nextInt(100) + 1;// Genera un precio aleatorio entre 1 y 100
+	      int indiceProducto = rand.nextInt(productosHabituales.length-1); // Genera un índice aleatorio entre 0 y 9 para seleccionar un nombre de producto aleatorio
+	      int indiceSeccion = rand.nextInt(secciones.length-1); // Genera un índice aleatorio entre 0 y 4 para seleccionar una sección aleatoria
+	      int indiceMarcas = rand.nextInt(marcas.length-1);
+	      Producto p = new Producto();
+	      p.setNombreProducto(productosHabituales[indiceProducto]);
+	      p.setMarca(marcas[indiceMarcas]);
+	      p.setPrecioProducto(precio);
+	      p.setSeccion(secciones[indiceSeccion]);
+	      insetarProductos(p);
+	      
+	      
+	    }
 	}
 	
 	
