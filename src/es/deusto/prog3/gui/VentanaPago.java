@@ -8,12 +8,17 @@ import java.awt.Image;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -41,30 +46,16 @@ public class VentanaPago extends JFrame {
 	private JTextField caducidad;
 	private JTextField cvv;
 	private JButton btnPagar;
+	private String ticketString;
+	
+
 	
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaPago window = new VentanaPago();
-					window.frmVentanaPago.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	public VentanaPago() {
-		initialize();
-			
-	}
 
 
-	private void initialize() {
+	public VentanaPago(String ticket) {
 		
-		
+		ticketString = ticket;
 		//Ventana de pago
 		
 		frmVentanaPago = new JFrame();
@@ -163,7 +154,7 @@ public class VentanaPago extends JFrame {
 		btnPagar.setBounds(135, 238, 119, 30);
 		btnPagar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				chequearPago();
+				chequearPago(ticket);
 				
 			}
 		});
@@ -184,21 +175,24 @@ public class VentanaPago extends JFrame {
 		
 		//Metodos para chequear
 		
-		private void chequearPago() {
+		private void chequearPago(String ticket) {
+			
+			/*
 			ArrayList<String> listaAdministradores = GestorBD.getAdministradores();
 			ArrayList<String> listaUsuarios = GestorBD.getClientes();
 			ArrayList<Pago> listaPagos = GestorBD.getPagos();
 			System.out.println(listaAdministradores);
-			
+			*/
 			String cuentaT = cuentaBancaria.getText();
 			String caducidadT = caducidad.getText();
 			String cvvT = cvv.getText();
+			/*
 			String correoT = GestorBD.cargarCorreoDeUnCliente();
 			int idT = GestorBD.cargarIdDeUnCliente();
 			String nombreT = GestorBD.cargarNombreDeUnCliente(correoT);
 			String apellidoT = GestorBD.cargarApellidoDeUnCliente(correoT);
 			String contraseniaT = GestorBD.cargarContraseniaDeUnCliente(correoT);
-			
+			*/
 			if(cuentaT.equals("") || caducidadT.equals("") || cvvT.equals("")) {
 				JOptionPane.showMessageDialog(null, "Rellena todos los campos");
 				
@@ -212,7 +206,12 @@ public class VentanaPago extends JFrame {
 				JOptionPane.showMessageDialog(null, "El CVV introducido no es correcto");
 			}else {
 				try {
-					GestorBD.crearPago(new Pago(1, correoT, nombreT, apellidoT, contraseniaT, cuentaT, caducidadT, cvvT));
+					//GestorBD.crearPago(new Pago(1, correoT, nombreT, apellidoT, contraseniaT, cuentaT, caducidadT, cvvT));
+					crearTicket(ticket);
+				
+				
+				
+				
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -222,6 +221,36 @@ public class VentanaPago extends JFrame {
 				System.exit(0);
 			}
 		}
+		public void crearTicket(String ticket) {
+
+			// Creamos un filechooser y guardamos la ruta y el nombre de la carpeta
+			JFileChooser guardar = new JFileChooser();
+			guardar.showSaveDialog(null);
+			guardar.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			File archivo = guardar.getSelectedFile();
+
+
+			// le pasamos al metodo para crear el fichero el nombre , la ruta y 'devolver'
+			guardarFichero(ticket, archivo);
+
+		}
+		public void guardarFichero(String texto, File archivo) {
+
+			FileWriter escribir;
+			try {
+
+				escribir = new FileWriter(archivo, true);
+				escribir.write(texto);
+				escribir.close();
+
+			} catch (FileNotFoundException ex) {
+				JOptionPane.showMessageDialog(null, "Error al guardar, ponga nombre al archivo");
+			} catch (IOException ex) {
+				JOptionPane.showMessageDialog(null, "Error al guardar, en la salida");
+			}
+
+		}
+
 		
 		
 		
