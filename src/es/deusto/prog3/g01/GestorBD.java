@@ -66,8 +66,8 @@ public class GestorBD {
 					+ " Apellido TEXT NOT NULL,\n" 
 					+ " Contraseña TEXT NOT NULL);";
 			
-			String cogerUsuario = "CREATE TABLE IF NOT EXISTS COMPRA(\n" 
-					+ "CorreoCliente TEXT PRIMARY KEY)";
+			String cogerUsuario = "CREATE TABLE IF NOT EXISTS COGERUSUARIO(\n" 
+					+ "CorreoUsuario TEXT PRIMARY KEY)";
 			
 
 			if (!stmt.execute(usuario) && !stmt.execute(seccion)  && !stmt.execute(compra) && !stmt.execute(producto) && !stmt.execute(cogerUsuario)) {
@@ -323,7 +323,7 @@ public class GestorBD {
 		}
 	}
 	
-	public static String getContrasenaCliente(String usuario) {
+	public static String getContrasenaUsuario(String usuario) {
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 			String contrasenaDev = "";
 			String sql = "select contrasena from usuario where correo='"+usuario+"'";
@@ -341,9 +341,9 @@ public class GestorBD {
 		}
 	}
 	
-	public static void almacenarClienteVentana(String correo) {
+	public static void almacenarUsuarioVentana(String correo) {
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
-			String sql = "insert into cogerCliente (correoCliente) values('" + correo + "')";
+			String sql = "insert into cogerUsuario (correoUsuario) values('" + correo + "')";
 			stmt.executeUpdate(sql);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

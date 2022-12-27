@@ -177,11 +177,11 @@ public class VentanaInicioSesion extends JFrame {
 		}else {
 			if(listaUsuarios.contains(usuario)){
 				System.out.println("Eres un usuario");
-				String contrasena2 = GestorBD.getContrasenaCliente(textUsuario.getText());
+				String contrasena2 = GestorBD.getContrasenaUsuario(textUsuario.getText());
 				System.out.println(contrasena2);
 			
 				if(passwordField.getText().equals(contrasena2)) {
-					GestorBD.almacenarClienteVentana(usuario);
+					GestorBD.almacenarUsuarioVentana(usuario);
 					VentanaPrincipal ventana = new VentanaPrincipal(null, frmVentanaInicioSesion);
 					ventana.setVisible(true);
 					
