@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import es.deusto.prog3.gui.*;
 import es.deusto.prog3.g01.*;
 
 public class VentanaRegistro extends JFrame {
@@ -77,7 +78,9 @@ public class VentanaRegistro extends JFrame {
 		btnNewButton_2 = new JButton("Registrarse");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();				
+				dispose();
+				chequearUsuario();
+
 			}
 		});
 		btnNewButton_2.setBackground(SystemColor.desktop);
@@ -152,6 +155,35 @@ public class VentanaRegistro extends JFrame {
 		setVisible(true);
 
 	}
+	
+	private void chequearUsuario(){
+		ArrayList<String> listaUsuarios = GestorBD.getUsuarios();
+		
+		if(textField.getText().equals("") || textField_1.getText().equals("") || textField_2.getText().equals("") || passwordField_1.getText().equals("")) {
+			JOptionPane.showMessageDialog(null, "Rellena todos los campos"); // Si alguno de los campos esta vacio
+		}else {
+			if(listaUsuarios.contains(textField.getText())) {
+				JOptionPane.showMessageDialog(null, "Error, este usuario ya existe");
+			}else {
+				String correo = textField.getText();
+				String nombre = textField_2.getText();
+				String apellido = textField_1.getText();
+				String contrasena = passwordField_1.getText();
+				int telefono = Integer.parseInt(textField_3.getText());
+				try {
+					GestorBD.crearUsuario(new Usuario(1, correo, nombre, apellido, contrasena));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		
+	}
+		
+		
+	
 	
 
 }

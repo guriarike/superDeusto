@@ -60,7 +60,7 @@ public class VentanaPago extends JFrame {
 		
 		frmVentanaPago = new JFrame();
 		frmVentanaPago.setTitle("Pago");
-		frmVentanaPago.getContentPane().setBackground(new Color(0xa8ccba));
+		frmVentanaPago.getContentPane().setBackground(new Color(0xffffbf));
 		//this.setSize(600, 300);
 		frmVentanaPago.setBounds(200, 200, 500, 350);
 		frmVentanaPago.setDefaultCloseOperation(DISPOSE_ON_CLOSE);

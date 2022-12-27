@@ -13,6 +13,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+
+import es.deusto.prog3.g01.*;
+import es.deusto.prog3.gui.*;
 
 public class GestorBD {
 	protected static final String DRIVER_NAME = "org.sqlite.JDBC";
@@ -62,8 +66,11 @@ public class GestorBD {
 					+ " Apellido TEXT NOT NULL,\n" 
 					+ " Contraseña TEXT NOT NULL);";
 			
+			String cogerUsuario = "CREATE TABLE IF NOT EXISTS COMPRA(\n" 
+					+ "CorreoCliente TEXT PRIMARY KEY)";
+			
 
-			if (!stmt.execute(usuario) && !stmt.execute(seccion)  && !stmt.execute(compra) && !stmt.execute(producto)) {
+			if (!stmt.execute(usuario) && !stmt.execute(seccion)  && !stmt.execute(compra) && !stmt.execute(producto) && !stmt.execute(cogerUsuario)) {
 				System.out.println("- Se ha creado la BBDD");
 			}
 		} catch (Exception ex) {
@@ -284,6 +291,66 @@ public class GestorBD {
 		return listaUsuarios;
 
 	}
+	
+	public static ArrayList<String> getUsuarios() {
+		ArrayList<String> ret = new ArrayList<>();
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+
+			String sql = "SELECT correo FROM USUARIO";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) { // Leer el resultset
+				String correo = rs.getString("correo");
+				ret.add(correo);
+			}
+			return ret;
+			
+		} catch (Exception e) {
+			System.out.println(String.format("Error todos los Usuarios: ", e.getMessage()));
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+	
+	public static void crearUsuario(Usuario usuario) {
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+			String sql = "insert into usuario (correo, nombre, apellido, contrasena) values('" + usuario.getCorreo() + "','"
+					+ usuario.getNombre() + "','" + usuario.getApellido() + "','" + usuario.getContrasena() + ")";
+			stmt.executeUpdate(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static String getContrasenaCliente(String usuario) {
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+			String contrasenaDev = "";
+			String sql = "select contrasena from usuario where correo='"+usuario+"'";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) { // Leer el resultset
+				String contrasena = rs.getString("contrasena");
+				contrasenaDev = contrasena;
+			}
+			
+			return contrasenaDev;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static void almacenarClienteVentana(String correo) {
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+			String sql = "insert into cogerCliente (correoCliente) values('" + correo + "')";
+			stmt.executeUpdate(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 
 	public static ArrayList<Producto> todosLosProductos() throws SQLException {
 		ArrayList<Producto> listaProductos = new ArrayList<>();

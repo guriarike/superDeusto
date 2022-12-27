@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 
 import es.deusto.prog3.g01.*;
+import es.deusto.prog3.gui.*;
 
 import java.awt.SystemColor;
 import java.awt.Color;
@@ -134,7 +135,7 @@ public class VentanaInicioSesion extends JFrame {
 		btnEntrar.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				try {
+				/*try {
 					//GestorBD.existeUsuarioEnBBDD(textUsuario.getText(), passwordField.getText())
 					if(true) {
 						VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(GestorBD.usuarioPorCorreo(textUsuario.getText()), ventanaActual);
@@ -146,9 +147,10 @@ public class VentanaInicioSesion extends JFrame {
 					
 				}catch(Exception ee) {
 					
-				}
+				}*/
 				
-				
+				chequearInicioSesion();
+
 				
 
 			}
@@ -160,7 +162,38 @@ public class VentanaInicioSesion extends JFrame {
 				new VentanaRegistro();
 			}
 		});
+		
+		
 
+	}
+	
+	private void chequearInicioSesion() {
+		ArrayList<String> listaUsuarios = GestorBD.getUsuarios();
+		System.out.println(listaUsuarios);
+		String usuario = textUsuario.getText();
+		
+		if(usuario.equals("") || passwordField.getText().equals("")) {
+			JOptionPane.showMessageDialog(null, "Rellena todos los campos"); // Si alguno de los campos esta vacio
+		}else {
+			if(listaUsuarios.contains(usuario)){
+				System.out.println("Eres un usuario");
+				String contrasena2 = GestorBD.getContrasenaCliente(textUsuario.getText());
+				System.out.println(contrasena2);
+			
+				if(passwordField.getText().equals(contrasena2)) {
+					GestorBD.almacenarClienteVentana(usuario);
+					VentanaPrincipal ventana = new VentanaPrincipal(null, frmVentanaInicioSesion);
+					ventana.setVisible(true);
+					
+					
+				}else {
+					JOptionPane.showMessageDialog(null, "Contrasena incorrecta");
+				}
+			
+			}else {
+				JOptionPane.showMessageDialog(null, "Primero debes registrarte");
+			}
+		}
 	}
 
 }

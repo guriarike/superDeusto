@@ -19,6 +19,8 @@ public class Main {
 			
 			
 			VentanaPrincipal ventana = new VentanaPrincipal(uu, null);
+			VentanaInicioSesion ventana2 = new VentanaInicioSesion();
+
 			
 			
 			/*int contador = 0;
