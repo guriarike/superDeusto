@@ -6,7 +6,8 @@ public class Compra {
 	private int idCompra;
 	private Date fechaCompra;
 	private double precioCompra;
-	private ArrayList<Producto> listaProductosDeCompra;
+	private String detalles;
+	private Usuario usuario;
 	
 	/*public Compra(int idCompra, Date fechaCompra,ArrayList<Producto>listaProductosDeCompra) {
 		this.idCompra = idCompra;
@@ -19,7 +20,7 @@ public class Compra {
 	@Override
 	public String toString() {
 		return "Compra [idCompra=" + idCompra + ", fechaCompra=" + fechaCompra + ", precioCompra=" + precioCompra
-				+ ", listaProductosDeCompra=" + listaProductosDeCompra + "]";
+				+ ", listaProductosDeCompra=" + "]";
 	}
 	
 
@@ -47,23 +48,28 @@ public class Compra {
 		this.precioCompra = precioCompra;
 	}
 
-	public ArrayList<Producto> getListaProductosDeCompra() {
-		return listaProductosDeCompra;
+
+	
+
+
+	public String getDetalles() {
+		return detalles;
 	}
 
-	public void setListaProductosDeCompra(ArrayList<Producto> listaProductosDeCompra) {
-		this.listaProductosDeCompra = listaProductosDeCompra;
+
+	public void setDetalles(String detalles) {
+		this.detalles = detalles;
 	}
 
-	public double calcularPrecioCompra(ArrayList<Producto> listaProductosDeCompra) {
-		double total= 0;
-		if(listaProductosDeCompra != null && listaProductosDeCompra.size()>= 1) {
-			for(Producto p:listaProductosDeCompra) {
-				total = total + p.getPrecioProducto();	
-			}
-			return total;
-		}
-		return -1;
+
+	public Usuario getUsuario() {
+		return usuario;
 	}
+
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
 
 }

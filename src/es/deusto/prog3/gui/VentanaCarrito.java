@@ -51,6 +51,7 @@ public class VentanaCarrito extends JFrame {
 			new Object[] { "Id", "Nombre", "PrecioProducto", "Cantidad" }, 0);
 	private JTable tProductos = new JTable(mProductos);
 	private Map<Integer, Integer> mapaCarrito;
+	private Usuario u;
 
 	public VentanaCarrito(Usuario usuario, Map<Integer, Integer> mapa, JFrame ventanaAnterior) {
 		JFrame ventanaActual = this;
@@ -59,7 +60,7 @@ public class VentanaCarrito extends JFrame {
 		setTitle("Ventana de administración de Carrito");
 
 		mapaCarrito = mapa;
-
+		u = usuario;
 		// Panel centro
 		JPanel pOeste = new JPanel(new BorderLayout()); // Lista centro
 		pOeste.setBackground(Color.GRAY);
@@ -262,7 +263,7 @@ public class VentanaCarrito extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				VentanaPago ventanaPago = new VentanaPago(crearTicketString());
+				VentanaPago ventanaPago = new VentanaPago(crearTicketString(), crearCompra());
 				ventanaActual.dispose();
 				ventanaPago.setVisible(true);
 
@@ -361,26 +362,14 @@ public class VentanaCarrito extends JFrame {
 		return precioTotal;
 	}
 
-	public void crearCompra() {
+	public Compra crearCompra() {
 		Compra compra = new Compra();
-		ArrayList<Producto> productosCompra = new ArrayList<>();
-		int i = 0;
-		try {
-			for (i = 0; i < tProductos.getRowCount(); i++) {
-				Producto p = GestorBD.ProductoPorId((Integer) tProductos.getValueAt(i, 0));
-				productosCompra.add(p);
-
-			}
-
-		} catch (Exception e) {
-
-		}
-
 		Date myDate = new Date(System.currentTimeMillis());
 		compra.setFechaCompra(myDate);
-		compra.setListaProductosDeCompra(productosCompra);
+		compra.setUsuario(u);
 		compra.setPrecioCompra(calcularPrecioTotal());
-
+		compra.setDetalles(crearTicketString());
+		return compra;
 	}
 
 	public void cargarTabla() {

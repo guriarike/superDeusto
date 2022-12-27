@@ -6,11 +6,13 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Array;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -20,7 +22,7 @@ import es.deusto.prog3.gui.*;
 
 public class GestorBD {
 	protected static final String DRIVER_NAME = "org.sqlite.JDBC";
-	protected static final String DATABASE_FILE = "db/baseDatos1.db";
+	protected static final String DATABASE_FILE = "db/baseDatos2.db";
 	protected static final String CONNECTION_STRING = "jdbc:sqlite:" + DATABASE_FILE;
 
 	public GestorBD() {
@@ -57,7 +59,9 @@ public class GestorBD {
 			String compra = "CREATE TABLE IF NOT EXISTS COMPRA(\n" 
 					+ "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
 					+ "Fecha DATE NOT NULL,\n" 
-					+ "Precio DOUBLE NOT NULL);";
+					+ "Detalles TEXT NOT NULL,\n"
+					+ "Precio DOUBLE NOT NULL);"
+					+ " FOREIGN KEY(UsuarioId) REFERENCES USUARIO(id) ON DELETE CASCADE);";
 
 			String usuario = "CREATE TABLE IF NOT EXISTS USUARIO (\n" 
 					+ " id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n"
@@ -164,6 +168,24 @@ public class GestorBD {
 				stmt.executeUpdate(sql);
 
 			}
+		} catch (Exception e) {
+			System.out.println(String.format("Error insertando productos: ", e.getMessage()));
+			e.printStackTrace();
+		}
+	}
+	public static void insetarCompra(Compra compra) {
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+			
+				Date fecha = (Date) compra.getFechaCompra();
+				Double precio = compra.getPrecioCompra();
+				String detalles = compra.getDetalles();
+				int idUsuario = compra.getUsuario().getId();
+				String sql = "INSERT INTO COMPRA (Fecha,Detalles,Precio,UsuarioId)" + "VALUES('" + fecha + "','" + precio
+						+ "','" + precio + "','" + detalles + "','"+idUsuario+"');";
+
+				stmt.executeUpdate(sql);
+
+			
 		} catch (Exception e) {
 			System.out.println(String.format("Error insertando productos: ", e.getMessage()));
 			e.printStackTrace();
@@ -441,7 +463,24 @@ public class GestorBD {
 
 		}
 	}
-
+	public static List<Compra> comprasDeUnUsuario(Usuario u) throws SQLException{
+		List<Compra> compras = new ArrayList<>();
+		Compra compra = new Compra();
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+			String sql = "SELECT * FROM COMPRA WHERE UsuarioId = '"+u.getId()+"'";
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				compra.setFechaCompra(rs.getDate("Fecha"));
+				compra.setDetalles(rs.getString("Detalles"));
+				compra.setPrecioCompra(rs.getDouble("Precio"));
+				compra.setUsuario(u);
+				compras.add(compra);
+			}
+			
+		}
+		return compras;
+		
+	}
 	/*
 	 * 
 	 * 
