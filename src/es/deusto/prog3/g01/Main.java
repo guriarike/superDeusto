@@ -11,6 +11,7 @@ public class Main {
 		try {
 			GestorBD.crearBBDD();
 			GestorBD.initProductos2();
+			GestorBD.insertarUsuarios();
 			
 			
 			Usuario uu = new Usuario();
@@ -19,12 +20,12 @@ public class Main {
 			uu.setContrasena("guriguri");
 			uu.setCorreo("guria");
 			
-			VentanaCuenta ven = new VentanaCuenta(uu);
-			ven.setVisible(true);
-			/**
+			//VentanaCuenta ven = new VentanaCuenta(uu);
+			//ven.setVisible(true);
+			
 			VentanaPrincipal ventana = new VentanaPrincipal(uu, null);
 			VentanaInicioSesion ventana2 = new VentanaInicioSesion();
-**/
+
 			
 			
 			/*int contador = 0;

@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 
@@ -68,11 +69,24 @@ public class GestorBD {
 					+ " Correo TEXT NOT NULL,\n"
 					+ " Nombre TEXT NOT NULL,\n" 					
 					+ " Apellido TEXT NOT NULL,\n" 
-					+ " Contraseña TEXT NOT NULL);";
+					+ " Contrasena TEXT NOT NULL);";
 			
 			String cogerUsuario = "CREATE TABLE IF NOT EXISTS COGERUSUARIO(\n" 
 					+ "CorreoUsuario TEXT PRIMARY KEY)";
-			
+			/*
+			try (Connection con2 = DriverManager.getConnection(CONNECTION_STRING); Statement stmt2 = con2.createStatement()) {
+				Scanner scan = new Scanner
+					  (GestorBD.class.getResourceAsStream("usuarios.txt") );
+					  while (scan.hasNextLine()) { //Mientras en el fichero haya lineas que leer
+					  String linea = scan.nextLine(); //Lee una linea del fichero String[] datos
+					  String[] datos = linea.split( "\t" );
+					  String sql = "insert into usuario (id, correo , nombre, apellido, contrasena) values (" 
+					  + datos[0] + ",'" + datos[1] + "','" + datos[2] + "','" +
+					  datos[3] + "','" + datos[4] + "');"; 
+					  stmt2.executeUpdate( sql ); }
+					  scan.close();
+			}
+			*/
 
 			if (!stmt.execute(usuario) && !stmt.execute(seccion)  && !stmt.execute(compra) && !stmt.execute(producto) && !stmt.execute(cogerUsuario)) {
 				System.out.println("- Se ha creado la BBDD");
@@ -142,7 +156,7 @@ public class GestorBD {
 				
 				
 
-				String sql = "INSERT INTO USUARIO (Correo,Nombre,Apellido,Contraseña)" 
+				String sql = "INSERT INTO USUARIO (Correo,Nombre,Apellido,Contrasena)" 
 				+ "VALUES(' " + correo + "','" + nombre + "','" + apellido + "','" + contrasena + "');";
 				stmt.executeUpdate(sql);
 				
