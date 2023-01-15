@@ -351,7 +351,7 @@ public class GestorBD {
 	public static void crearUsuario(Usuario usuario) {
 		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
 			String sql = "insert into usuario (correo, nombre, apellido, contrasena) values('" + usuario.getCorreo() + "','"
-					+ usuario.getNombre() + "','" + usuario.getApellido() + "','" + usuario.getContrasena() + ")";
+					+ usuario.getNombre() + "','" + usuario.getApellido() + "','" + usuario.getContrasena() + "')";
 			stmt.executeUpdate(sql);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
